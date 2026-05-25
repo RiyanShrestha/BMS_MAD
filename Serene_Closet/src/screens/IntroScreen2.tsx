@@ -1,17 +1,42 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { SafeLayout } from '../components/SafeLayout';
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
 import { Cpu, Check } from '../components/Icons';
 import { THEME } from '../theme';
 import { IMAGES } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { LuxuryButton } from '../components/LuxuryButton';
+import { EditorialImage } from '../components/EditorialImage';
 
 export const IntroScreen2 = ({ navigation }: any) => {
+  const contentOpacity = useRef(new Animated.Value(0)).current;
+  const contentTranslateY = useRef(new Animated.Value(18)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(contentOpacity, {
+        toValue: 1,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+      Animated.timing(contentTranslateY, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeLayout statusBarMode="dark-content" style={styles.container} applyBottomInset={true}>
       {/* Top half: Cinematic Fashion Image with AI floating overlay */}
       <View style={styles.imageSection}>
-        <Image source={{ uri: IMAGES.intro2 }} style={styles.image} resizeMode="cover" />
+        <EditorialImage
+          source={{ uri: IMAGES.intro2 }}
+          style={styles.image}
+          containerStyle={StyleSheet.absoluteFill}
+          enableOverlay={true}
+        />
         
         {/* Style Analyzed Floating Glass Card */}
         <GlassCard style={styles.aiOverlayCard} opacity={0.88}>
@@ -35,7 +60,13 @@ export const IntroScreen2 = ({ navigation }: any) => {
       </View>
 
       {/* Bottom half: Editorial Details */}
-      <View style={styles.contentSection}>
+      <Animated.View style={[
+        styles.contentSection,
+        {
+          opacity: contentOpacity,
+          transform: [{ translateY: contentTranslateY }]
+        }
+      ]}>
         {/* Progress Indicators */}
         <View style={styles.progressContainer}>
           <View style={styles.progressBar} />
@@ -62,8 +93,8 @@ export const IntroScreen2 = ({ navigation }: any) => {
         >
           <Text style={styles.skipTextBottom}>Skip</Text>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </Animated.View>
+    </SafeLayout>
   );
 };
 
@@ -91,8 +122,8 @@ const styles = StyleSheet.create({
     left: THEME.spacing.md,
     right: THEME.spacing.md,
     padding: THEME.spacing.md,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.75)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
   },
   aiHeader: {
     flexDirection: 'row',
@@ -101,14 +132,14 @@ const styles = StyleSheet.create({
   },
   aiHeaderText: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     letterSpacing: 1.5,
     color: THEME.colors.primaryBurgundy,
     marginLeft: 6,
   },
   aiTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 20,
+    fontSize: 18,
     color: THEME.colors.darkText,
     marginBottom: THEME.spacing.sm,
   },
@@ -119,20 +150,20 @@ const styles = StyleSheet.create({
   },
   fullProgress: {
     flex: 1,
-    height: 4,
+    height: 3,
     backgroundColor: 'rgba(139, 0, 31, 0.1)',
-    borderRadius: 2,
+    borderRadius: 1.5,
     marginRight: THEME.spacing.sm,
   },
   activeProgress: {
     width: '85%',
     height: '100%',
     backgroundColor: THEME.colors.primaryBurgundy,
-    borderRadius: 2,
+    borderRadius: 1.5,
   },
   progressPercent: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 10,
+    fontSize: 9.5,
     color: THEME.colors.primaryBurgundy,
   },
   statusRow: {
@@ -141,7 +172,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 10,
+    fontSize: 9.5,
     color: THEME.colors.secondaryText,
     marginLeft: 4,
   },
@@ -155,21 +186,21 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: THEME.spacing.md + 4,
+    marginBottom: THEME.spacing.md,
   },
   progressBar: {
-    width: 24,
-    height: 3,
+    width: 20,
+    height: 2.5,
     backgroundColor: THEME.colors.border,
     marginHorizontal: 3,
-    borderRadius: 2,
+    borderRadius: 1.5,
   },
   progressBarActive: {
     backgroundColor: THEME.colors.primaryBurgundy,
   },
   heading: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 24,
+    fontSize: 22,
     color: THEME.colors.darkText,
     textAlign: 'center',
     letterSpacing: 0.5,
@@ -177,7 +208,7 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 13,
+    fontSize: 12.5,
     color: THEME.colors.secondaryText,
     textAlign: 'center',
     lineHeight: 18,
@@ -193,8 +224,8 @@ const styles = StyleSheet.create({
   skipTextBottom: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
     color: THEME.colors.secondaryText,
-    fontSize: 12,
-    letterSpacing: 1,
+    fontSize: 11,
+    letterSpacing: 1.2,
     textTransform: 'uppercase',
   },
 });

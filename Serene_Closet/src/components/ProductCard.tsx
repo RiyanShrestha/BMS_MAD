@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { Heart } from './Icons';
 import { THEME } from '../theme';
+import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2; // Two column layout with padding
@@ -23,21 +24,36 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const [isLiked, setIsLiked] = React.useState(false);
 
+  const handleLike = () => {
+    Vibration.vibrate(10);
+    setIsLiked(!isLiked);
+  };
+
+  const handlePress = () => {
+    Vibration.vibrate(8);
+    if (onPress) onPress();
+  };
+
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
-      onPress={onPress}
+      activeOpacity={0.92}
+      onPress={handlePress}
       style={styles.container}
     >
       <View style={styles.imageContainer}>
-        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+        <EditorialImage
+          source={{ uri: image }}
+          style={styles.image}
+          containerStyle={StyleSheet.absoluteFill}
+          enableOverlay={true}
+        />
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => setIsLiked(!isLiked)}
+          onPress={handleLike}
           style={styles.likeButton}
         >
           <Heart
-            size={14}
+            size={13}
             color={isLiked ? THEME.colors.primaryBurgundy : THEME.colors.secondaryText}
             fill={isLiked ? THEME.colors.primaryBurgundy : 'transparent'}
           />
@@ -58,7 +74,7 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.lg,
     backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
@@ -93,7 +109,7 @@ const styles = StyleSheet.create({
   },
   category: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     letterSpacing: 1.2,
     color: THEME.colors.secondaryText,
     textTransform: 'uppercase',
@@ -101,13 +117,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 14,
+    fontSize: 13.5,
     color: THEME.colors.darkText,
     marginBottom: 4,
+    letterSpacing: 0.2,
   },
   price: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 13,
+    fontSize: 12,
     color: THEME.colors.primaryBurgundy,
     letterSpacing: 0.5,
   },

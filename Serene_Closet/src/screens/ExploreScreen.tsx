@@ -4,37 +4,36 @@ import {
   Text,
   View,
   ScrollView,
-  SafeAreaView,
-  StatusBar,
   FlatList,
-  Dimensions,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { THEME } from '../theme';
 import { EXPLORE_PRODUCTS } from '../utils/mockData';
 import { SearchBar } from '../components/SearchBar';
 import { CategoryChip } from '../components/CategoryChip';
-import { ProductCard } from '../components/ProductCard';
+import { AnimatedProductCard } from '../components/AnimatedProductCard';
+import { SafeLayout } from '../components/SafeLayout';
 
 const CATEGORIES = ['All', 'Women', 'Men', 'Luxury'];
 
-export const ExploreScreen = () => {
+export const ExploreScreen = ({ navigation }: any): React.JSX.Element => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const insets = useSafeAreaInsets();
 
-  // Filter products by search and category
   const filteredProducts = EXPLORE_PRODUCTS.filter((prod) => {
     const matchesCategory =
       selectedCategory === 'All' ||
       prod.category.toLowerCase() === selectedCategory.toLowerCase() ||
-      (selectedCategory === 'Luxury' && parseInt(prod.price.replace('$', '').replace(',', '')) > 600);
+      (selectedCategory === 'Luxury' && parseInt(prod.price.replace('$', '').replace(',', ''), 10) > 600);
     const matchesSearch = prod.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       prod.category.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <SafeLayout statusBarMode="dark-content" style={styles.container}>
+
       {/* Header section */}
       <View style={styles.header}>
         <Text style={styles.title}>Explore</Text>
@@ -56,6 +55,7 @@ export const ExploreScreen = () => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.chipScroll}
+          scrollEventThrottle={16}
         >
           {CATEGORIES.map((cat) => (
             <CategoryChip
@@ -76,21 +76,25 @@ export const ExploreScreen = () => {
         columnWrapperStyle={styles.gridRow}
         contentContainerStyle={styles.gridContainer}
         showsVerticalScrollIndicator={false}
+        scrollEventThrottle={16}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyText}>No items found in this category.</Text>
           </View>
         }
-        renderItem={({ item }) => (
-          <ProductCard
+        renderItem={({ item, index }) => (
+          <AnimatedProductCard
+            id={item.id}
             image={item.image}
             title={item.title}
             category={item.category}
             price={item.price}
+            index={index}
+            onPress={() => navigation.navigate('ProductDetail', { productId: item.id })}
           />
         )}
       />
-    </SafeAreaView>
+    </SafeLayout>
   );
 };
 
@@ -130,7 +134,7 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     paddingHorizontal: THEME.spacing.md,
-    paddingBottom: 100, // Safe padding for bottom navbar
+    paddingBottom: 100,
   },
   gridRow: {
     justifyContent: 'space-between',

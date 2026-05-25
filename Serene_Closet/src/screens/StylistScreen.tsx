@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
-  Image,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
-  StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Animated,
+  Vibration,
 } from 'react-native';
+import { SafeLayout } from '../components/SafeLayout';
 import { Send, Sparkles, RefreshCw, Bookmark } from '../components/Icons';
 import { THEME } from '../theme';
 import { AI_RECOMMENDED_LOOK, CHAT_HISTORY } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { LuxuryButton } from '../components/LuxuryButton';
+import { EditorialImage } from '../components/EditorialImage';
 
 const CONTEXTS = ['Boardroom', 'High-Tea', 'Soiree', 'Dinner'];
 
@@ -25,10 +26,66 @@ export const StylistScreen = () => {
   const [inputValue, setInputValue] = useState('');
   const [selectedContext, setSelectedContext] = useState('Boardroom');
   const [currentLook, setCurrentLook] = useState(AI_RECOMMENDED_LOOK);
+  const [isTyping, setIsTyping] = useState(false);
+
+  // Typing Dots Animation
+  const dot1 = useRef(new Animated.Value(0.3)).current;
+  const dot2 = useRef(new Animated.Value(0.3)).current;
+  const dot3 = useRef(new Animated.Value(0.3)).current;
+
+  // Fade-in animation for recommendations
+  const revealAnim = useRef(new Animated.Value(0.8)).current;
+
+  useEffect(() => {
+    if (isTyping) {
+      const animateDot = (dot: Animated.Value, delay: number) => {
+        return Animated.loop(
+          Animated.sequence([
+            Animated.delay(delay),
+            Animated.timing(dot, {
+              toValue: 1.0,
+              duration: 400,
+              useNativeDriver: true,
+            }),
+            Animated.timing(dot, {
+              toValue: 0.3,
+              duration: 400,
+              useNativeDriver: true,
+            }),
+          ])
+        );
+      };
+
+      const anim1 = animateDot(dot1, 0);
+      const anim2 = animateDot(dot2, 150);
+      const anim3 = animateDot(dot3, 300);
+
+      anim1.start();
+      anim2.start();
+      anim3.start();
+
+      return () => {
+        anim1.stop();
+        anim2.stop();
+        anim3.stop();
+      };
+    }
+  }, [isTyping, dot1, dot2, dot3]);
+
+  // Stagger look reveal on occasions change
+  useEffect(() => {
+    revealAnim.setValue(0.5);
+    Animated.timing(revealAnim, {
+      toValue: 1,
+      duration: THEME.motion.durations.screen,
+      useNativeDriver: true,
+    }).start();
+  }, [selectedContext]);
 
   const handleSend = () => {
     if (!inputValue.trim()) return;
 
+    Vibration.vibrate(10);
     const newMsg = {
       id: `m-${messages.length + 1}`,
       sender: 'user',
@@ -37,13 +94,16 @@ export const StylistScreen = () => {
 
     setMessages([...messages, newMsg]);
     setInputValue('');
+    setIsTyping(true);
 
-    // Simulated premium AI Stylist delayed typing feedback
+    // AI Concierge typing pacing simulation
     setTimeout(() => {
+      setIsTyping(false);
+      Vibration.vibrate(15);
       const responses = [
         "Splendid choice. I would suggest matching that with our Pleated Wool Trousers and the Cashmere Knit for a softer architectural line.",
-        "An elegant direction. Let's accent that with gold-toned fine jewelry to anchor the luxury warmth.",
-        "Understood Sarswati. I've updated the seasonal capsule archive. The composition is highly optimized for comfort and visual authority."
+        "An elegant direction. Let's accent that with gold-toned fine jewelry to anchor the luxury warmth of the fabric composition.",
+        "Understood, Sarswati. I've updated the seasonal capsule archive. The composition is highly optimized for comfort and visual authority."
       ];
       const randomResponse = {
         id: `m-${messages.length + 2}`,
@@ -51,11 +111,11 @@ export const StylistScreen = () => {
         text: responses[Math.floor(Math.random() * responses.length)],
       };
       setMessages((prev) => [...prev, randomResponse]);
-    }, 1500);
+    }, 2000);
   };
 
   const handleSwapItems = () => {
-    // Elegant toggle of item images mock to simulate swapping items
+    Vibration.vibrate(10);
     const swappedItems = [...currentLook.items];
     const first = swappedItems.shift();
     if (first) {
@@ -68,8 +128,7 @@ export const StylistScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <SafeLayout statusBarMode="dark-content" style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={{ flex: 1 }}
@@ -92,7 +151,10 @@ export const StylistScreen = () => {
                 <TouchableOpacity
                   key={ctx}
                   activeOpacity={0.8}
-                  onPress={() => setSelectedContext(ctx)}
+                  onPress={() => {
+                    Vibration.vibrate(8);
+                    setSelectedContext(ctx);
+                  }}
                   style={[
                     styles.contextChip,
                     selectedContext === ctx && styles.contextChipActive,
@@ -104,7 +166,7 @@ export const StylistScreen = () => {
                       selectedContext === ctx && styles.contextChipTextActive,
                     ]}
                   >
-                    {ctx}
+                    {ctx.toUpperCase()}
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -112,7 +174,7 @@ export const StylistScreen = () => {
           </View>
 
           {/* Curated Outfit Set Presentation */}
-          <View style={styles.outfitSection}>
+          <Animated.View style={[styles.outfitSection, { opacity: revealAnim }]}>
             <Text style={styles.sectionLabel}>RECOMMENDED LOOK COMPOSITION</Text>
             <Text style={styles.lookTitle}>{currentLook.name}</Text>
             
@@ -124,7 +186,11 @@ export const StylistScreen = () => {
               {currentLook.items.map((item) => (
                 <View key={item.id} style={styles.itemCard}>
                   <View style={styles.itemImageContainer}>
-                    <Image source={{ uri: item.image }} style={styles.itemImage} />
+                    <EditorialImage
+                      source={{ uri: item.image }}
+                      style={styles.itemImage}
+                      containerStyle={styles.itemImageContainer}
+                    />
                   </View>
                   <View style={styles.itemMeta}>
                     <Text style={styles.itemCategory}>{item.category}</Text>
@@ -146,12 +212,12 @@ export const StylistScreen = () => {
               />
               <LuxuryButton
                 title="Save Look"
-                onPress={() => {}}
+                onPress={() => Vibration.vibrate([0, 15, 20])}
                 style={styles.actionBtnRight}
                 icon={<Bookmark size={14} color={THEME.colors.cardBackground} style={{ marginRight: 6 }} />}
               />
             </View>
-          </View>
+          </Animated.View>
 
           {/* Chat dialog logs */}
           <View style={styles.chatSection}>
@@ -168,7 +234,7 @@ export const StylistScreen = () => {
                   ]}
                 >
                   {isStylist ? (
-                    <GlassCard style={styles.stylistBubble} opacity={0.9}>
+                    <GlassCard style={styles.stylistBubble} opacity={0.88}>
                       <Text style={styles.messageText}>{msg.text}</Text>
                     </GlassCard>
                   ) : (
@@ -179,12 +245,23 @@ export const StylistScreen = () => {
                 </View>
               );
             })}
+
+            {/* Pulsing AI Typing indicator */}
+            {isTyping && (
+              <View style={[styles.messageRow, styles.messageRowLeft]}>
+                <GlassCard style={styles.typingBubble} opacity={0.85}>
+                  <Animated.View style={[styles.typingDot, { opacity: dot1 }]} />
+                  <Animated.View style={[styles.typingDot, { opacity: dot2 }]} />
+                  <Animated.View style={[styles.typingDot, { opacity: dot3 }]} />
+                </GlassCard>
+              </View>
+            )}
           </View>
         </ScrollView>
 
         {/* Input Bar (Sticky Bottom) */}
         <View style={styles.inputStickyContainer}>
-          <GlassCard style={styles.inputStickyCard} opacity={0.96}>
+          <GlassCard style={styles.inputStickyCard} opacity={0.94}>
             <TextInput
               style={styles.chatInput}
               placeholder="Ask Serene Stylist..."
@@ -203,7 +280,7 @@ export const StylistScreen = () => {
           </GlassCard>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </SafeLayout>
   );
 };
 
@@ -213,7 +290,7 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.colors.softBeigeBackground,
   },
   scrollContent: {
-    paddingBottom: 170, // Buffer for sticky bottom chat input + tab nav
+    paddingBottom: 180, // Buffer for sticky bottom chat input + tab nav
   },
   header: {
     paddingHorizontal: THEME.spacing.md,
@@ -226,9 +303,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 24,
+    fontSize: 22,
     color: THEME.colors.darkText,
     marginLeft: 6,
+    letterSpacing: 0.5,
   },
   subtitle: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
@@ -243,8 +321,8 @@ const styles = StyleSheet.create({
   },
   sectionLabel: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
-    letterSpacing: 1.5,
+    fontSize: 8.5,
+    letterSpacing: 1.8,
     color: THEME.colors.secondaryText,
     marginBottom: THEME.spacing.sm,
     textTransform: 'uppercase',
@@ -256,7 +334,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: THEME.spacing.md,
     paddingVertical: THEME.spacing.xs + 2,
     borderRadius: THEME.borderRadius.pill,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     marginRight: 6,
     backgroundColor: THEME.colors.cardBackground,
@@ -267,7 +345,8 @@ const styles = StyleSheet.create({
   },
   contextChipText: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 12,
+    fontSize: 10,
+    letterSpacing: 0.8,
     color: THEME.colors.secondaryText,
   },
   contextChipTextActive: {
@@ -280,7 +359,7 @@ const styles = StyleSheet.create({
   },
   lookTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 20,
+    fontSize: 18,
     color: THEME.colors.darkText,
     marginBottom: THEME.spacing.md,
   },
@@ -292,7 +371,7 @@ const styles = StyleSheet.create({
     marginRight: THEME.spacing.md,
     backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
@@ -300,7 +379,7 @@ const styles = StyleSheet.create({
   itemImageContainer: {
     width: '100%',
     height: 140,
-    borderRadius: THEME.borderRadius.card - 6,
+    borderRadius: THEME.borderRadius.card - 4,
     overflow: 'hidden',
   },
   itemImage: {
@@ -336,12 +415,12 @@ const styles = StyleSheet.create({
   actionBtn: {
     flex: 1,
     height: 40,
-    borderRadius: THEME.borderRadius.button - 4,
+    borderRadius: THEME.borderRadius.button,
   },
   actionBtnRight: {
     flex: 1,
     height: 40,
-    borderRadius: THEME.borderRadius.button - 4,
+    borderRadius: THEME.borderRadius.button,
     marginLeft: THEME.spacing.sm,
   },
   chatSection: {
@@ -362,12 +441,13 @@ const styles = StyleSheet.create({
     paddingLeft: THEME.spacing.xl,
   },
   stylistBubble: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: 'rgba(255, 255, 255, 0.75)',
     borderRadius: THEME.borderRadius.card,
     borderTopLeftRadius: 4,
     padding: THEME.spacing.md,
     backgroundColor: THEME.colors.cardBackground,
+    ...THEME.shadows.premium,
   },
   userBubble: {
     backgroundColor: THEME.colors.primaryBurgundy,
@@ -378,19 +458,37 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 13,
+    fontSize: 12.5,
     color: THEME.colors.darkText,
     lineHeight: 18,
   },
   userMessageText: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 13,
+    fontSize: 12.5,
     color: THEME.colors.cardBackground,
     lineHeight: 18,
   },
+  typingBubble: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 62,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.75)',
+    backgroundColor: THEME.colors.cardBackground,
+  },
+  typingDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: THEME.colors.primaryBurgundy,
+    marginHorizontal: 2.5,
+  },
   inputStickyContainer: {
     position: 'absolute',
-    bottom: 84, // Anchored elegantly above bottom tab navigation
+    bottom: 96, // Anchored elegantly above bottom tab navigation
     left: THEME.spacing.md,
     right: THEME.spacing.md,
     zIndex: 100,
@@ -398,12 +496,12 @@ const styles = StyleSheet.create({
   inputStickyCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 52,
+    height: 50,
     borderRadius: THEME.borderRadius.pill,
-    paddingLeft: THEME.spacing.md + 4,
+    paddingLeft: THEME.spacing.md + 2,
     paddingRight: THEME.spacing.xs,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.95)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
     ...THEME.shadows.premiumDeep,
   },
   chatInput: {
@@ -414,9 +512,9 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   sendBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: THEME.colors.primaryBurgundy,
     justifyContent: 'center',
     alignItems: 'center',

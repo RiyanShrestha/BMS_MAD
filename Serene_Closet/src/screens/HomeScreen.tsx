@@ -1,46 +1,94 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
-  Image,
   TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
+  Animated,
+  Vibration,
 } from 'react-native';
-import { Menu, Bell } from '../components/Icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Menu } from '../components/Icons';
 import { THEME } from '../theme';
 import { IMAGES, TRENDING_PRODUCTS } from '../utils/mockData';
 import { SearchBar } from '../components/SearchBar';
 import { WeatherCard } from '../components/WeatherCard';
 import { FashionCard } from '../components/FashionCard';
 import { AIRecommendationCard } from '../components/AIRecommendationCard';
+import { SafeLayout } from '../components/SafeLayout';
+import { EditorialImage } from '../components/EditorialImage';
 
-export const HomeScreen = ({ navigation }: any) => {
+type HomeScreenProps = {
+  navigation: any;
+};
+
+export const HomeScreen = ({ navigation }: HomeScreenProps): React.JSX.Element => {
+  const insets = useSafeAreaInsets();
+  
+  // Fade-up reveals on mount
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(15)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: THEME.motion.durations.screen,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: THEME.motion.durations.screen,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const handleAvatarPress = () => {
+    Vibration.vibrate(8);
+    navigation.navigate('Profile');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+    <SafeLayout statusBarMode="dark-content" style={styles.container}>
       {/* Top Navbar */}
       <View style={styles.navbar}>
-        <TouchableOpacity activeOpacity={0.8} style={styles.navIcon}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => Vibration.vibrate(5)}
+          style={styles.navIcon}
+        >
           <Menu size={20} color={THEME.colors.darkText} strokeWidth={1.5} />
         </TouchableOpacity>
-        
+
         <View style={styles.logoContainer}>
           <Text style={styles.logoText}>SERENE</Text>
         </View>
 
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => navigation.navigate('Closet')}
-          style={styles.avatarContainer}
+          onPress={handleAvatarPress}
+          style={styles.avatarWrapper}
         >
-          <Image source={{ uri: IMAGES.avatar }} style={styles.avatar} />
+          <EditorialImage
+            source={{ uri: IMAGES.avatar }}
+            style={styles.avatar}
+            containerStyle={styles.avatarContainer}
+            enableOverlay={true}
+          />
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        scrollEventThrottle={16}
+        style={{
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        }}
+      >
         {/* Editorial Greeting */}
         <View style={styles.greetingContainer}>
           <Text style={styles.greetingSub}>WELCOME TO SERENE</Text>
@@ -51,7 +99,10 @@ export const HomeScreen = ({ navigation }: any) => {
         <View style={styles.searchWrapper}>
           <SearchBar
             placeholder="Search collections, fabrics, styles..."
-            onFilterPress={() => navigation.navigate('Explore')}
+            onFilterPress={() => {
+              Vibration.vibrate(8);
+              navigation.navigate('Explore');
+            }}
           />
         </View>
 
@@ -70,7 +121,13 @@ export const HomeScreen = ({ navigation }: any) => {
             <Text style={styles.sectionTitle}>Trending Now</Text>
             <Text style={styles.sectionSubtitle}>CURATED AUTUMN EDITORIALS</Text>
           </View>
-          <TouchableOpacity activeOpacity={0.8} onPress={() => navigation.navigate('Explore')}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              Vibration.vibrate(8);
+              navigation.navigate('Explore');
+            }}
+          >
             <Text style={styles.viewAllBtn}>View All</Text>
           </TouchableOpacity>
         </View>
@@ -79,6 +136,7 @@ export const HomeScreen = ({ navigation }: any) => {
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.horizontalScroll}
+          scrollEventThrottle={16}
         >
           {TRENDING_PRODUCTS.map((prod) => (
             <FashionCard
@@ -106,8 +164,8 @@ export const HomeScreen = ({ navigation }: any) => {
           onPress={() => navigation.navigate('Stylist')}
           style={styles.heroCard}
         />
-      </ScrollView>
-    </SafeAreaView>
+      </Animated.ScrollView>
+    </SafeLayout>
   );
 };
 
@@ -123,7 +181,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: THEME.spacing.md,
     backgroundColor: THEME.colors.softBeigeBackground,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderColor: THEME.colors.borderLight,
   },
   navIcon: {
@@ -135,25 +193,29 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: THEME.colors.darkText,
     letterSpacing: 6,
   },
-  avatarContainer: {
+  avatarWrapper: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     overflow: 'hidden',
+  },
+  avatarContainer: {
+    width: '100%',
+    height: '100%',
   },
   avatar: {
     width: '100%',
     height: '100%',
   },
   scrollContent: {
-    paddingBottom: 90, // Leave room for floating bottom tab navigation!
+    paddingBottom: 110,
   },
   greetingContainer: {
     paddingHorizontal: THEME.spacing.md,
@@ -162,20 +224,19 @@ const styles = StyleSheet.create({
   },
   greetingSub: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     letterSpacing: 2,
     color: THEME.colors.primaryBurgundy,
     marginBottom: 4,
   },
   greetingMain: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 26,
+    fontSize: 24,
     color: THEME.colors.darkText,
   },
   searchWrapper: {
     paddingHorizontal: THEME.spacing.md,
-    marginTop: THEME.spacing.sm,
-    marginBottom: THEME.spacing.sm,
+    marginVertical: THEME.spacing.md,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -183,32 +244,33 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: THEME.spacing.md,
     marginTop: THEME.spacing.md,
-    marginBottom: THEME.spacing.sm + 2,
+    marginBottom: THEME.spacing.sm,
   },
   sectionTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 20,
+    fontSize: 18,
     color: THEME.colors.darkText,
   },
   sectionSubtitle: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 8,
+    fontSize: 7.5,
     letterSpacing: 1.5,
     color: THEME.colors.secondaryText,
     marginTop: 2,
   },
   viewAllBtn: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 11,
-    letterSpacing: 1,
+    fontSize: 10.5,
+    letterSpacing: 1.2,
     color: THEME.colors.primaryBurgundy,
     textTransform: 'uppercase',
   },
   horizontalScroll: {
     paddingLeft: THEME.spacing.md,
+    paddingRight: THEME.spacing.md,
     paddingBottom: THEME.spacing.md,
   },
   heroCard: {
-    marginTop: THEME.spacing.xs,
+    marginHorizontal: THEME.spacing.md,
   },
 });

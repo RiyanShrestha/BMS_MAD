@@ -1,15 +1,35 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { SafeLayout } from '../components/SafeLayout';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { THEME } from '../theme';
 import { IMAGES } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { LuxuryButton } from '../components/LuxuryButton';
+import { EditorialImage } from '../components/EditorialImage';
 
 const { width } = Dimensions.get('window');
 
 export const IntroScreen3 = ({ navigation }: any) => {
+  const revealOpacity = useRef(new Animated.Value(0)).current;
+  const revealTranslateY = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(revealOpacity, {
+        toValue: 1,
+        duration: 650,
+        useNativeDriver: true,
+      }),
+      Animated.timing(revealTranslateY, {
+        toValue: 0,
+        duration: 650,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeLayout statusBarMode="dark-content" style={styles.container} applyBottomInset={true}>
       {/* Top right skip */}
       <TouchableOpacity
         activeOpacity={0.8}
@@ -22,12 +42,23 @@ export const IntroScreen3 = ({ navigation }: any) => {
       {/* Model Image inside Arch-style Border */}
       <View style={styles.archWrapper}>
         <View style={styles.archContainer}>
-          <Image source={{ uri: IMAGES.intro3 }} style={styles.image} resizeMode="cover" />
+          <EditorialImage
+            source={{ uri: IMAGES.intro3 }}
+            style={styles.image}
+            containerStyle={StyleSheet.absoluteFill}
+            enableOverlay={true}
+          />
         </View>
       </View>
 
       {/* Floating white/glass content card at the bottom */}
-      <View style={styles.contentSection}>
+      <Animated.View style={[
+        styles.contentSection,
+        {
+          opacity: revealOpacity,
+          transform: [{ translateY: revealTranslateY }]
+        }
+      ]}>
         <GlassCard style={styles.floatingCard} opacity={0.92}>
           {/* Progress Indicators */}
           <View style={styles.progressContainer}>
@@ -48,8 +79,8 @@ export const IntroScreen3 = ({ navigation }: any) => {
             style={styles.ctaButton}
           />
         </GlassCard>
-      </View>
-    </SafeAreaView>
+      </Animated.View>
+    </SafeLayout>
   );
 };
 
@@ -61,7 +92,7 @@ const styles = StyleSheet.create({
   },
   skipButtonTop: {
     alignSelf: 'flex-end',
-    marginTop: THEME.spacing.lg,
+    marginTop: THEME.spacing.md,
     marginRight: THEME.spacing.lg,
     padding: THEME.spacing.sm,
     zIndex: 10,
@@ -69,24 +100,24 @@ const styles = StyleSheet.create({
   skipTextTop: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
     color: THEME.colors.primaryBurgundy,
-    fontSize: 12,
-    letterSpacing: 1.5,
+    fontSize: 10.5,
+    letterSpacing: 2.0,
     textTransform: 'uppercase',
   },
   archWrapper: {
     alignItems: 'center',
-    marginTop: THEME.spacing.sm,
+    marginTop: THEME.spacing.xs,
     flex: 1,
     justifyContent: 'center',
   },
   archContainer: {
-    width: width * 0.72,
-    height: width * 0.95,
-    borderTopLeftRadius: width * 0.36, // Creates the perfect luxury editorial arch
-    borderTopRightRadius: width * 0.36,
+    width: width * 0.70,
+    height: width * 0.90,
+    borderTopLeftRadius: width * 0.35, // Creates the perfect luxury editorial arch
+    borderTopRightRadius: width * 0.35,
     overflow: 'hidden',
     backgroundColor: THEME.colors.cardBackground,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     ...THEME.shadows.premiumDeep,
   },
@@ -104,8 +135,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: THEME.spacing.lg + 4,
     paddingHorizontal: THEME.spacing.lg,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
     borderRadius: THEME.borderRadius.card,
     ...THEME.shadows.premiumDeep,
   },
@@ -115,18 +146,18 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.md,
   },
   progressBar: {
-    width: 24,
-    height: 3,
+    width: 20,
+    height: 2.5,
     backgroundColor: THEME.colors.border,
     marginHorizontal: 3,
-    borderRadius: 2,
+    borderRadius: 1.5,
   },
   progressBarActive: {
     backgroundColor: THEME.colors.primaryBurgundy,
   },
   heading: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 24,
+    fontSize: 22,
     color: THEME.colors.darkText,
     textAlign: 'center',
     letterSpacing: 0.5,
@@ -134,7 +165,7 @@ const styles = StyleSheet.create({
   },
   paragraph: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 13,
+    fontSize: 12.5,
     color: THEME.colors.secondaryText,
     textAlign: 'center',
     lineHeight: 18,

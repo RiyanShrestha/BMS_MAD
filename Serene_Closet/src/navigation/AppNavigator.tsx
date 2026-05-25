@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { Home as HomeIcon, Compass, Scan, Shirt, Sparkles } from '../components/Icons';
-import { THEME } from '../theme';
+import { FloatingTabBar } from '../components/FloatingTabBar';
+import { RootStackParamList, TabParamList } from './types';
 
 // Import Screens
 import { IntroScreen1 } from '../screens/IntroScreen1';
@@ -17,47 +16,26 @@ import { ScanScreen } from '../screens/ScanScreen';
 import { StylistScreen } from '../screens/StylistScreen';
 import { WardrobeScreen } from '../screens/WardrobeScreen';
 
-// Navigation Stacks & Tabs
-const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
+// Import newly added screens
+import { ProductDetailScreen } from '../screens/ProductDetailScreen';
+import { CheckoutScreen } from '../screens/CheckoutScreen';
+import { OrderTrackingScreen } from '../screens/OrderTrackingScreen';
+import { WishlistScreen } from '../screens/WishlistScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
+import { NotificationScreen } from '../screens/NotificationScreen';
 
-// Bottom Tab Navigation Configuration
-const TabNavigator = () => {
+const Stack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
+
+// Bottom Tab Navigation Configuration utilizing custom FloatingTabBar
+const TabNavigator = (): React.JSX.Element => {
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      tabBar={(props) => <FloatingTabBar {...props} />}
+      screenOptions={{
         headerShown: false,
-        tabBarShowLabel: true,
-        tabBarActiveTintColor: THEME.colors.primaryBurgundy,
-        tabBarInactiveTintColor: THEME.colors.secondaryText,
-        tabBarLabelStyle: styles.tabLabel,
-        tabBarStyle: styles.tabBar,
-        tabBarIcon: ({ color, size, focused }) => {
-          const strokeWidth = focused ? 2 : 1.2;
-          const iconSize = 20;
-
-          switch (route.name) {
-            case 'HomeTab':
-              return <HomeIcon size={iconSize} color={color} strokeWidth={strokeWidth} />;
-            case 'Explore':
-              return <Compass size={iconSize} color={color} strokeWidth={strokeWidth} />;
-            case 'Scan':
-              return (
-                <View style={styles.centerScanContainer}>
-                  <View style={styles.centerScanButton}>
-                    <Scan size={22} color={THEME.colors.cardBackground} strokeWidth={2} />
-                  </View>
-                </View>
-              );
-            case 'Closet':
-              return <Shirt size={iconSize} color={color} strokeWidth={strokeWidth} />;
-            case 'Stylist':
-              return <Sparkles size={iconSize} color={color} strokeWidth={strokeWidth} />;
-            default:
-              return null;
-          }
-        },
-      })}
+      }}
     >
       <Tab.Screen
         name="HomeTab"
@@ -72,10 +50,7 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Scan"
         component={ScanScreen}
-        options={{
-          tabBarLabel: 'Scan',
-          tabBarLabelStyle: [styles.tabLabel, styles.tabLabelCenter],
-        }}
+        options={{ tabBarLabel: 'Scan' }}
       />
       <Tab.Screen
         name="Closet"
@@ -92,67 +67,34 @@ const TabNavigator = () => {
 };
 
 // Root Stack Navigator
-export const AppNavigator = () => {
+export const AppNavigator = (): React.JSX.Element => {
   return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Intro1"
         screenOptions={{
           headerShown: false,
-          animation: 'fade', // Sophisticated transitions
+          animation: 'fade',
         }}
       >
+        {/* Onboarding & Login */}
         <Stack.Screen name="Intro1" component={IntroScreen1} />
         <Stack.Screen name="Intro2" component={IntroScreen2} />
         <Stack.Screen name="Intro3" component={IntroScreen3} />
         <Stack.Screen name="Login" component={LoginScreen} />
+        
+        {/* Main Tab Bar App */}
         <Stack.Screen name="MainApp" component={TabNavigator} />
+
+        {/* Concierge Flow Screens */}
+        <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+        <Stack.Screen name="Checkout" component={CheckoutScreen} />
+        <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} />
+        <Stack.Screen name="Wishlist" component={WishlistScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
+        <Stack.Screen name="Notifications" component={NotificationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  tabBar: {
-    position: 'absolute',
-    bottom: 22,
-    left: 16,
-    right: 16,
-    height: 64,
-    backgroundColor: 'rgba(255, 248, 247, 0.94)', // Soft glass texture
-    borderRadius: THEME.borderRadius.pill,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.85)',
-    ...THEME.shadows.premiumDeep,
-    paddingTop: 8,
-    paddingBottom: 8,
-    elevation: 8,
-  },
-  tabLabel: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 10,
-    letterSpacing: 0.5,
-    marginTop: 2,
-  },
-  tabLabelCenter: {
-    marginTop: 18, // Adjust offset for centered capture bubble
-  },
-  centerScanContainer: {
-    position: 'relative',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  centerScanButton: {
-    position: 'absolute',
-    top: -28, // Floats elegantly above the bar line
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: THEME.colors.primaryBurgundy,
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...THEME.shadows.premiumDeep,
-    borderWidth: 2,
-    borderColor: THEME.colors.cardBackground,
-  },
-});

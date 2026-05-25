@@ -1,24 +1,53 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { SafeLayout } from '../components/SafeLayout';
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
-  Image,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
-  FlatList,
+  Animated,
+  Vibration,
 } from 'react-native';
 import { Sparkles, Plus, Cloud, ArrowRight } from '../components/Icons';
 import { THEME } from '../theme';
 import { IMAGES, MY_WARDROBE } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { WardrobeCard } from '../components/WardrobeCard';
+import { EditorialImage } from '../components/EditorialImage';
 
 export const WardrobeScreen = ({ navigation }: any) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(15)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: THEME.motion.durations.screen,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: THEME.motion.durations.screen,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const handleGenerate = () => {
+    Vibration.vibrate(10);
+    navigation.navigate('Stylist');
+  };
+
+  const handleDigitize = () => {
+    Vibration.vibrate(10);
+    navigation.navigate('Scan');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeLayout statusBarMode="dark-content" style={styles.container}>
       <StatusBar barStyle="dark-content" />
 
       {/* Top Header */}
@@ -27,29 +56,41 @@ export const WardrobeScreen = ({ navigation }: any) => {
         <Text style={styles.subtitle}>DIGITAL ARCHIVE & COGNITIVE UTILITY</Text>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+        style={{
+          opacity: fadeAnim,
+          transform: [{ translateY: slideAnim }],
+        }}
+      >
         
         {/* Main: What Should I Wear Today Greeting & Generate card */}
         <View style={styles.heroSection}>
           <Text style={styles.heroGreeting}>What Should I Wear Today?</Text>
           
           <TouchableOpacity
-            activeOpacity={0.92}
-            onPress={() => navigation.navigate('Stylist')}
+            activeOpacity={0.94}
+            onPress={handleGenerate}
             style={styles.generateCard}
           >
-            <Image source={{ uri: IMAGES.abstractWardrobe }} style={styles.generateCardBg} />
+            <EditorialImage
+              source={{ uri: IMAGES.abstractWardrobe }}
+              style={styles.generateCardBg}
+              containerStyle={StyleSheet.absoluteFill}
+              enableOverlay={true}
+            />
             <View style={styles.generateCardOverlay} />
             
-            <GlassCard style={styles.generateInnerCard} opacity={0.8}>
+            <GlassCard style={styles.generateInnerCard} opacity={0.84}>
               <View style={styles.sparkleRow}>
-                <Sparkles size={16} color={THEME.colors.primaryBurgundy} fill={THEME.colors.primaryBurgundy} />
+                <Sparkles size={14} color={THEME.colors.primaryBurgundy} fill={THEME.colors.primaryBurgundy} />
                 <Text style={styles.sparkleText}>COGNITIVE SYNTHESIS</Text>
               </View>
               <Text style={styles.generateTitle}>Generate Look</Text>
               <Text style={styles.generateSub}>AI will compose a styling recommendation from your current wardrobe archive.</Text>
               <View style={styles.arrowIcon}>
-                <ArrowRight size={14} color={THEME.colors.primaryBurgundy} />
+                <ArrowRight size={12} color={THEME.colors.primaryBurgundy} />
               </View>
             </GlassCard>
           </TouchableOpacity>
@@ -63,7 +104,7 @@ export const WardrobeScreen = ({ navigation }: any) => {
                 <Text style={styles.statsCategory}>Autumn/Winter '24 Capsule</Text>
                 <Text style={styles.statsTemp}>Bangalore • 24°C</Text>
               </View>
-              <Cloud size={24} color={THEME.colors.primaryBurgundy} strokeWidth={1.5} />
+              <Cloud size={22} color={THEME.colors.primaryBurgundy} strokeWidth={1.5} />
             </View>
             <View style={styles.divider} />
             <View style={styles.utilityContainer}>
@@ -81,12 +122,12 @@ export const WardrobeScreen = ({ navigation }: any) => {
         {/* Add item Quick capture deck */}
         <View style={styles.quickCaptureSection}>
           <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => navigation.navigate('Scan')}
+            activeOpacity={0.88}
+            onPress={handleDigitize}
             style={styles.captureCard}
           >
             <View style={styles.captureIconCircle}>
-              <Plus size={20} color={THEME.colors.primaryBurgundy} />
+              <Plus size={18} color={THEME.colors.primaryBurgundy} />
             </View>
             <View style={styles.captureTextMeta}>
               <Text style={styles.captureTitle}>Digitize New Item</Text>
@@ -114,8 +155,8 @@ export const WardrobeScreen = ({ navigation }: any) => {
           ))}
         </View>
 
-      </ScrollView>
-    </SafeAreaView>
+      </Animated.ScrollView>
+    </SafeLayout>
   );
 };
 
@@ -134,8 +175,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 24,
+    fontSize: 22,
     color: THEME.colors.darkText,
+    letterSpacing: 0.5,
   },
   subtitle: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
@@ -150,7 +192,7 @@ const styles = StyleSheet.create({
   },
   heroGreeting: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 22,
+    fontSize: 20,
     color: THEME.colors.darkText,
     marginBottom: THEME.spacing.md,
   },
@@ -164,20 +206,19 @@ const styles = StyleSheet.create({
     ...THEME.shadows.premiumDeep,
   },
   generateCardBg: {
-    ...StyleSheet.absoluteFill,
     width: '100%',
     height: '100%',
   },
   generateCardOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(43, 29, 29, 0.22)',
+    backgroundColor: 'rgba(32, 21, 21, 0.22)',
   },
   generateInnerCard: {
     margin: THEME.spacing.md,
     padding: THEME.spacing.md,
-    borderRadius: THEME.borderRadius.card - 6,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: THEME.borderRadius.card - 4,
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
   },
   sparkleRow: {
     flexDirection: 'row',
@@ -193,7 +234,7 @@ const styles = StyleSheet.create({
   },
   generateTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 20,
+    fontSize: 18,
     color: THEME.colors.darkText,
     marginBottom: 2,
   },
@@ -222,8 +263,8 @@ const styles = StyleSheet.create({
   },
   statsCard: {
     padding: THEME.spacing.md + 4,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.65)',
+    borderWidth: 0.5,
+    borderColor: 'rgba(255, 255, 255, 0.85)',
   },
   statsHeader: {
     flexDirection: 'row',
@@ -232,21 +273,21 @@ const styles = StyleSheet.create({
   },
   statsCategory: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 13,
+    fontSize: 12,
     color: THEME.colors.darkText,
     letterSpacing: 0.5,
   },
   statsTemp: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 18,
+    fontSize: 16,
     color: THEME.colors.primaryBurgundy,
     marginTop: 2,
   },
   divider: {
-    height: 1,
+    height: 0.5,
     backgroundColor: THEME.colors.border,
     marginVertical: THEME.spacing.md,
-    opacity: 0.5,
+    opacity: 0.6,
   },
   utilityContainer: {
     width: '100%',
@@ -259,27 +300,27 @@ const styles = StyleSheet.create({
   },
   utilityLabel: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     color: THEME.colors.secondaryText,
     letterSpacing: 1.5,
   },
   utilityVal: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 11,
+    fontSize: 10.5,
     color: THEME.colors.primaryBurgundy,
   },
   utilityTrack: {
     width: '100%',
-    height: 6,
-    backgroundColor: 'rgba(139, 0, 31, 0.08)',
-    borderRadius: 3,
+    height: 5,
+    backgroundColor: 'rgba(139, 0, 31, 0.06)',
+    borderRadius: 2.5,
     overflow: 'hidden',
   },
   utilityBar: {
     width: '72%',
     height: '100%',
     backgroundColor: THEME.colors.primaryBurgundy,
-    borderRadius: 3,
+    borderRadius: 2.5,
   },
   quickCaptureSection: {
     paddingHorizontal: THEME.spacing.md,
@@ -289,7 +330,7 @@ const styles = StyleSheet.create({
     height: 68,
     backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     flexDirection: 'row',
     alignItems: 'center',
@@ -300,22 +341,24 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: 'rgba(139, 0, 31, 0.08)',
+    backgroundColor: 'rgba(139, 0, 31, 0.05)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: THEME.spacing.md,
+    borderWidth: 0.5,
+    borderColor: 'rgba(139, 0, 31, 0.12)',
   },
   captureTextMeta: {
     flex: 1,
   },
   captureTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 15,
+    fontSize: 14.5,
     color: THEME.colors.darkText,
   },
   captureSub: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 10,
+    fontSize: 9.5,
     color: THEME.colors.secondaryText,
     marginTop: 1,
   },
@@ -329,12 +372,12 @@ const styles = StyleSheet.create({
   },
   archiveTitle: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 20,
+    fontSize: 18,
     color: THEME.colors.darkText,
   },
   archiveCount: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 10,
+    fontSize: 9,
     letterSpacing: 1,
     color: THEME.colors.primaryBurgundy,
   },

@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { Calendar } from './Icons';
 import { THEME } from '../theme';
+import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = (width - 48) / 2;
@@ -23,14 +24,24 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
   wearCount = 0,
   onPress,
 }) => {
+  const handlePress = () => {
+    Vibration.vibrate(8);
+    if (onPress) onPress();
+  };
+
   return (
     <TouchableOpacity
-      activeOpacity={0.9}
-      onPress={onPress}
+      activeOpacity={0.92}
+      onPress={handlePress}
       style={styles.container}
     >
       <View style={styles.imageContainer}>
-        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+        <EditorialImage
+          source={{ uri: image }}
+          style={styles.image}
+          containerStyle={StyleSheet.absoluteFill}
+          enableOverlay={true}
+        />
         <View style={styles.wearBadge}>
           <Text style={styles.wearCount}>{wearCount} wears</Text>
         </View>
@@ -54,7 +65,7 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.md + 4,
     backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
@@ -74,14 +85,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: THEME.spacing.sm,
     right: THEME.spacing.sm,
-    backgroundColor: 'rgba(43, 29, 29, 0.75)',
+    backgroundColor: 'rgba(32, 21, 21, 0.72)',
     paddingHorizontal: THEME.spacing.sm,
     paddingVertical: THEME.spacing.xs - 2,
     borderRadius: THEME.borderRadius.pill,
   },
   wearCount: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     color: THEME.colors.cardBackground,
     letterSpacing: 0.5,
   },
@@ -91,7 +102,7 @@ const styles = StyleSheet.create({
   },
   category: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     letterSpacing: 1.2,
     color: THEME.colors.secondaryText,
     textTransform: 'uppercase',
@@ -99,9 +110,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 14,
+    fontSize: 13.5,
     color: THEME.colors.darkText,
     marginBottom: THEME.spacing.xs,
+    letterSpacing: 0.2,
   },
   statsContainer: {
     flexDirection: 'row',
@@ -113,7 +125,7 @@ const styles = StyleSheet.create({
   },
   lastWornText: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 11,
+    fontSize: 10.5,
     color: THEME.colors.secondaryText,
   },
 });

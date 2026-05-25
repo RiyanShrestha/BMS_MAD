@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { THEME } from '../theme';
+import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.68;
@@ -18,14 +19,24 @@ export const FashionCard: React.FC<FashionCardProps> = ({
   category,
   onPress,
 }) => {
+  const handlePress = () => {
+    Vibration.vibrate(8);
+    if (onPress) onPress();
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.9}
-      onPress={onPress}
+      onPress={handlePress}
       style={styles.container}
     >
       <View style={styles.imageContainer}>
-        <Image source={{ uri: image }} style={styles.image} resizeMode="cover" />
+        <EditorialImage
+          source={{ uri: image }}
+          style={styles.image}
+          containerStyle={StyleSheet.absoluteFill}
+          enableOverlay={true}
+        />
         <View style={styles.categoryBadge}>
           <Text style={styles.categoryText}>{category}</Text>
         </View>
@@ -44,7 +55,7 @@ const styles = StyleSheet.create({
     marginRight: THEME.spacing.md,
     borderRadius: THEME.borderRadius.card,
     backgroundColor: THEME.colors.cardBackground,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
@@ -74,7 +85,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     letterSpacing: 1,
     color: THEME.colors.primaryBurgundy,
     textTransform: 'uppercase',
@@ -85,13 +96,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
-    fontSize: 16,
+    fontSize: 15.5,
     color: THEME.colors.darkText,
     marginBottom: 2,
+    letterSpacing: 0.2,
   },
   editorialSub: {
     fontFamily: THEME.typography.body.fontFamily,
-    fontSize: 9,
+    fontSize: 8.5,
     color: THEME.colors.secondaryText,
     letterSpacing: 1.5,
   },

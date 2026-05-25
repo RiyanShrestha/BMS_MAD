@@ -12,8 +12,8 @@ interface GlassCardProps extends ViewProps {
 export const GlassCard: React.FC<GlassCardProps> = ({
   children,
   style,
-  borderWidth = 1,
-  opacity = 0.68,
+  borderWidth = 0.5,
+  opacity = 0.72,
   ...props
 }) => {
   return (
@@ -21,7 +21,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
       style={[
         styles.card,
         {
-          backgroundColor: `rgba(255, 248, 247, ${opacity})`,
+          backgroundColor: `rgba(255, 251, 249, ${opacity})`,
           borderWidth: borderWidth,
         },
         style,
@@ -36,9 +36,9 @@ export const GlassCard: React.FC<GlassCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     borderRadius: THEME.borderRadius.card,
-    borderColor: 'rgba(255, 255, 255, 0.6)',
+    borderColor: 'rgba(255, 255, 255, 0.75)',
     padding: THEME.spacing.md,
-    ...THEME.shadows.premium,
+    ...THEME.shadows.premiumDeep,
     overflow: 'hidden',
   },
 });
