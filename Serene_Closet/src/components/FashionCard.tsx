@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
@@ -19,6 +20,8 @@ export const FashionCard: React.FC<FashionCardProps> = ({
   category,
   onPress,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
   const handlePress = () => {
     Vibration.vibrate(8);
     if (onPress) onPress();
@@ -28,7 +31,13 @@ export const FashionCard: React.FC<FashionCardProps> = ({
     <TouchableOpacity
       activeOpacity={0.9}
       onPress={handlePress}
-      style={styles.container}
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.border,
+        }
+      ]}
     >
       <View style={styles.imageContainer}>
         <EditorialImage
@@ -37,13 +46,21 @@ export const FashionCard: React.FC<FashionCardProps> = ({
           containerStyle={StyleSheet.absoluteFill}
           enableOverlay={true}
         />
-        <View style={styles.categoryBadge}>
-          <Text style={styles.categoryText}>{category}</Text>
+        <View 
+          style={[
+            styles.categoryBadge,
+            {
+              backgroundColor: isDarkMode ? 'rgba(34, 25, 25, 0.85)' : 'rgba(255, 255, 255, 0.85)',
+              borderColor: colors.border,
+            }
+          ]}
+        >
+          <Text style={[styles.categoryText, { color: colors.primaryBurgundy }]}>{category}</Text>
         </View>
       </View>
       <View style={styles.info}>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        <Text style={styles.editorialSub}>LIMITED EDITION</Text>
+        <Text style={[styles.title, { color: colors.darkText }]} numberOfLines={1}>{title}</Text>
+        <Text style={[styles.editorialSub, { color: colors.secondaryText }]}>LIMITED EDITION</Text>
       </View>
     </TouchableOpacity>
   );
@@ -54,9 +71,7 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH,
     marginRight: THEME.spacing.md,
     borderRadius: THEME.borderRadius.card,
-    backgroundColor: THEME.colors.cardBackground,
     borderWidth: 0.5,
-    borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
     marginBottom: THEME.spacing.sm,
@@ -76,35 +91,33 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: THEME.spacing.sm,
     left: THEME.spacing.sm,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
     paddingHorizontal: THEME.spacing.sm + 2,
     paddingVertical: THEME.spacing.xs,
-    borderRadius: THEME.borderRadius.pill,
+    borderRadius: 28,
     borderWidth: 0.5,
-    borderColor: THEME.colors.border,
   },
   categoryText: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
     letterSpacing: 1,
-    color: THEME.colors.primaryBurgundy,
     textTransform: 'uppercase',
+    fontWeight: '700',
   },
   info: {
     paddingVertical: THEME.spacing.sm,
     paddingHorizontal: THEME.spacing.xs,
   },
   title: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 15.5,
-    color: THEME.colors.darkText,
     marginBottom: 2,
     letterSpacing: 0.2,
+    fontWeight: '700',
   },
   editorialSub: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
-    color: THEME.colors.secondaryText,
     letterSpacing: 1.5,
+    fontWeight: '600',
   },
 });

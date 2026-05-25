@@ -4,15 +4,19 @@ import { SafeLayout } from '../components/SafeLayout';
 import { EditorialHeader } from '../components/EditorialHeader';
 import { GlassCard } from '../components/GlassCard';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { Sparkles, Info } from '../components/Icons';
 
 export const SettingsScreen = ({ navigation }: any) => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { colors, isDarkMode, toggleDarkMode } = useTheme();
   const [biometrics, setBiometrics] = useState(true);
   const [notifications, setNotifications] = useState(true);
 
   return (
-    <SafeLayout statusBarMode="dark-content" style={styles.container}>
+    <SafeLayout
+      statusBarMode={isDarkMode ? 'light-content' : 'dark-content'}
+      style={[styles.container, { backgroundColor: colors.softBeigeBackground }]}
+    >
       <EditorialHeader
         title="Settings"
         subtitle="Private Atelier Configurations"
@@ -22,60 +26,65 @@ export const SettingsScreen = ({ navigation }: any) => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Concierge Support Card */}
         <View style={styles.supportSection}>
-          <GlassCard style={styles.supportCard} opacity={0.94}>
+          <GlassCard style={styles.supportCard} opacity={isDarkMode ? 0.85 : 0.94}>
             <View style={styles.supportHeader}>
-              <Sparkles size={16} color={THEME.colors.primaryBurgundy} fill={THEME.colors.primaryBurgundy} />
-              <Text style={styles.supportHeaderTitle}>VIP LUXURY CONCIERGE</Text>
+              <Sparkles size={16} color={colors.primaryBurgundy} fill={colors.primaryBurgundy} />
+              <Text style={[styles.supportHeaderTitle, { color: colors.primaryBurgundy }]}>VIP LUXURY CONCIERGE</Text>
             </View>
-            <Text style={styles.supportText}>
+            <Text style={[styles.supportText, { color: colors.darkText }]}>
               "A dedicated styling consultant is standing by to assist you with physical fittings, couture reservations, or bespoke digital closet organization."
             </Text>
-            <TouchableOpacity activeOpacity={0.88} style={styles.supportBtn}>
-              <Text style={styles.supportBtnText}>CALL CONCIERGE ATELIER</Text>
+            <TouchableOpacity
+              activeOpacity={0.88}
+              style={[styles.supportBtn, { backgroundColor: colors.primaryBurgundy }]}
+            >
+              <Text style={[styles.supportBtnText, { color: isDarkMode ? '#140F0F' : colors.cardBackground }]}>
+                CALL CONCIERGE ATELIER
+              </Text>
             </TouchableOpacity>
           </GlassCard>
         </View>
 
         {/* Configurations List */}
         <View style={styles.configSection}>
-          <Text style={styles.sectionLabel}>AESTHETIC CONFIGURATIONS</Text>
+          <Text style={[styles.sectionLabel, { color: colors.secondaryText }]}>AESTHETIC CONFIGURATIONS</Text>
           
-          <View style={styles.configItem}>
+          <View style={[styles.configItem, { backgroundColor: colors.cardBackground, borderColor: colors.border }]}>
             <View>
-              <Text style={styles.configTitle}>Dark Mode Styling</Text>
-              <Text style={styles.configSub}>Invert layout to cinematic deep black styling</Text>
+              <Text style={[styles.configTitle, { color: colors.darkText }]}>Dark Mode Styling</Text>
+              <Text style={[styles.configSub, { color: colors.secondaryText }]}>Invert layout to cinematic deep black styling</Text>
             </View>
             <Switch
-              value={darkMode}
-              onValueChange={setDarkMode}
-              trackColor={{ false: THEME.colors.border, true: THEME.colors.primaryBurgundy }}
-              thumbColor={THEME.colors.cardBackground}
+              value={isDarkMode}
+              onValueChange={toggleDarkMode}
+              trackColor={{ false: colors.border, true: colors.primaryBurgundy }}
+              thumbColor={colors.cardBackground}
             />
           </View>
 
-          <View style={styles.configItem}>
+          <View style={[styles.configItem, { backgroundColor: colors.cardBackground, borderColor: colors.border }]}>
             <View>
-              <Text style={styles.configTitle}>Biometric Safe Entry</Text>
-              <Text style={styles.configSub}>Secure your fashion archive with Fingerprint/FaceID</Text>
+              <Text style={[styles.configTitle, { color: colors.darkText }]}>Biometric Safe Entry</Text>
+              <Text style={[styles.configSub, { color: colors.secondaryText }]}>Secure your fashion archive with Fingerprint/FaceID</Text>
             </View>
             <Switch
               value={biometrics}
               onValueChange={setBiometrics}
-              trackColor={{ false: THEME.colors.border, true: THEME.colors.primaryBurgundy }}
-              thumbColor={THEME.colors.cardBackground}
+              trackColor={{ false: colors.border, true: colors.primaryBurgundy }}
+              thumbColor={colors.cardBackground}
             />
           </View>
 
-          <View style={styles.configItem}>
+          <View style={[styles.configItem, { backgroundColor: colors.cardBackground, borderColor: colors.border }]}>
             <View>
-              <Text style={styles.configTitle}>Push Recommendations</Text>
-              <Text style={styles.configSub}>Receive micro weather notifications and fits</Text>
+              <Text style={[styles.configTitle, { color: colors.darkText }]}>Push Recommendations</Text>
+              <Text style={[styles.configSub, { color: colors.secondaryText }]}>Receive micro weather notifications and fits</Text>
             </View>
             <Switch
               value={notifications}
               onValueChange={setNotifications}
-              trackColor={{ false: THEME.colors.border, true: THEME.colors.primaryBurgundy }}
-              thumbColor={THEME.colors.cardBackground}
+              trackColor={{ false: colors.border, true: colors.primaryBurgundy }}
+              thumbColor={colors.cardBackground}
             />
           </View>
         </View>
@@ -83,8 +92,8 @@ export const SettingsScreen = ({ navigation }: any) => {
         {/* Legal Info */}
         <View style={styles.legalSection}>
           <View style={styles.legalRow}>
-            <Info size={12} color={THEME.colors.secondaryText} />
-            <Text style={styles.legalText}>SERENE Closets App Version 0.0.1 • Crafted in Bengaluru</Text>
+            <Info size={12} color={colors.secondaryText} />
+            <Text style={[styles.legalText, { color: colors.secondaryText }]}>SERENE Closets App Version 0.0.1 • Crafted in Bengaluru</Text>
           </View>
         </View>
       </ScrollView>

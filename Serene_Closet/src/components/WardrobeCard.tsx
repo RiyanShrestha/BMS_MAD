@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { Calendar } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
@@ -24,6 +25,8 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
   wearCount = 0,
   onPress,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
   const handlePress = () => {
     Vibration.vibrate(8);
     if (onPress) onPress();
@@ -33,7 +36,14 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
     <TouchableOpacity
       activeOpacity={0.92}
       onPress={handlePress}
-      style={styles.container}
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.cardBackground,
+          borderColor: colors.border,
+          shadowColor: isDarkMode ? '#000000' : '#201515',
+        }
+      ]}
     >
       <View style={styles.imageContainer}>
         <EditorialImage
@@ -42,17 +52,17 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
           containerStyle={StyleSheet.absoluteFill}
           enableOverlay={true}
         />
-        <View style={styles.wearBadge}>
-          <Text style={styles.wearCount}>{wearCount} wears</Text>
+        <View style={[styles.wearBadge, { backgroundColor: isDarkMode ? 'rgba(10, 6, 6, 0.72)' : 'rgba(32, 21, 21, 0.72)' }]}>
+          <Text style={[styles.wearCount, { color: isDarkMode ? '#FAF5F2' : colors.cardBackground }]}>{wearCount} wears</Text>
         </View>
       </View>
       <View style={styles.info}>
-        <Text style={styles.category}>{category}</Text>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
+        <Text style={[styles.category, { color: colors.secondaryText }]}>{category}</Text>
+        <Text style={[styles.title, { color: colors.darkText }]} numberOfLines={1}>{title}</Text>
         
         <View style={styles.statsContainer}>
-          <Calendar size={11} color={THEME.colors.secondaryText} style={styles.statIcon} />
-          <Text style={styles.lastWornText} numberOfLines={1}>Worn: {lastWorn}</Text>
+          <Calendar size={11} color={colors.secondaryText} style={styles.statIcon} />
+          <Text style={[styles.lastWornText, { color: colors.secondaryText }]} numberOfLines={1}>Worn: {lastWorn}</Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -63,10 +73,8 @@ const styles = StyleSheet.create({
   container: {
     width: CARD_WIDTH,
     marginBottom: THEME.spacing.md + 4,
-    backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
     borderWidth: 0.5,
-    borderColor: THEME.colors.border,
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
   },
@@ -85,35 +93,34 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: THEME.spacing.sm,
     right: THEME.spacing.sm,
-    backgroundColor: 'rgba(32, 21, 21, 0.72)',
     paddingHorizontal: THEME.spacing.sm,
     paddingVertical: THEME.spacing.xs - 2,
-    borderRadius: THEME.borderRadius.pill,
+    borderRadius: 28,
   },
   wearCount: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
-    color: THEME.colors.cardBackground,
     letterSpacing: 0.5,
+    fontWeight: '600',
   },
   info: {
     paddingVertical: THEME.spacing.sm,
     paddingHorizontal: THEME.spacing.xs,
   },
   category: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
     letterSpacing: 1.2,
-    color: THEME.colors.secondaryText,
     textTransform: 'uppercase',
     marginBottom: 2,
+    fontWeight: '600',
   },
   title: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 13.5,
-    color: THEME.colors.darkText,
     marginBottom: THEME.spacing.xs,
     letterSpacing: 0.2,
+    fontWeight: '700',
   },
   statsContainer: {
     flexDirection: 'row',
@@ -124,8 +131,7 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   lastWornText: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 10.5,
-    color: THEME.colors.secondaryText,
   },
 });

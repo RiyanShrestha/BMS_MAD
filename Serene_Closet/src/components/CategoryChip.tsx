@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 
 interface CategoryChipProps {
   label: string;
@@ -17,20 +18,33 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
   style,
   textStyle,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
+  const activeChipStyle = {
+    backgroundColor: colors.primaryBurgundy,
+    borderColor: colors.primaryBurgundy,
+  };
+
+  const inactiveChipStyle = {
+    borderColor: colors.border,
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
       style={[
         styles.chip,
-        isActive && styles.chipActive,
+        inactiveChipStyle,
+        isActive && activeChipStyle,
         style,
       ]}
     >
       <Text
         style={[
           styles.text,
-          isActive && styles.textActive,
+          { color: colors.secondaryText },
+          isActive && { color: isDarkMode ? '#140F0F' : colors.cardBackground },
           textStyle,
         ]}
       >
@@ -42,27 +56,17 @@ export const CategoryChip: React.FC<CategoryChipProps> = ({
 
 const styles = StyleSheet.create({
   chip: {
-    paddingHorizontal: THEME.spacing.lg,
-    paddingVertical: THEME.spacing.sm + 2,
-    borderRadius: THEME.borderRadius.pill,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: 28,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: THEME.colors.border,
-    marginRight: THEME.spacing.sm,
-    ...THEME.shadows.premium,
-  },
-  chipActive: {
-    backgroundColor: THEME.colors.primaryBurgundy,
-    borderColor: THEME.colors.primaryBurgundy,
+    marginRight: 10,
   },
   text: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 13,
-    color: THEME.colors.secondaryText,
     letterSpacing: 0.8,
-  },
-  textActive: {
-    color: THEME.colors.cardBackground,
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontWeight: '600',
   },
 });

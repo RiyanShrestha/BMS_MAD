@@ -3,12 +3,15 @@ import { SafeLayout } from '../components/SafeLayout';
 import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
 import { Cpu, Check } from '../components/Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { IMAGES } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { LuxuryButton } from '../components/LuxuryButton';
 import { EditorialImage } from '../components/EditorialImage';
+import { AmbientBackground } from '../components/AmbientBackground';
 
 export const IntroScreen2 = ({ navigation }: any) => {
+  const { colors, isDarkMode } = useTheme();
   const contentOpacity = useRef(new Animated.Value(0)).current;
   const contentTranslateY = useRef(new Animated.Value(18)).current;
 
@@ -28,86 +31,92 @@ export const IntroScreen2 = ({ navigation }: any) => {
   }, []);
 
   return (
-    <SafeLayout statusBarMode="dark-content" style={styles.container} applyBottomInset={true}>
-      {/* Top half: Cinematic Fashion Image with AI floating overlay */}
-      <View style={styles.imageSection}>
-        <EditorialImage
-          source={{ uri: IMAGES.intro2 }}
-          style={styles.image}
-          containerStyle={StyleSheet.absoluteFill}
-          enableOverlay={true}
-        />
-        
-        {/* Style Analyzed Floating Glass Card */}
-        <GlassCard style={styles.aiOverlayCard} opacity={0.88}>
-          <View style={styles.aiHeader}>
-            <Cpu size={14} color={THEME.colors.primaryBurgundy} />
-            <Text style={styles.aiHeaderText}>STYLE ANALYZED</Text>
-          </View>
-          <Text style={styles.aiTitle}>Minimalist Chic</Text>
+    <AmbientBackground>
+      <SafeLayout
+        statusBarMode={isDarkMode ? 'light-content' : 'dark-content'}
+        style={[styles.container, { backgroundColor: 'transparent' }]}
+        applyBottomInset={true}
+      >
+        {/* Top half: Cinematic Fashion Image with AI floating overlay */}
+        <View style={[styles.imageSection, { shadowColor: isDarkMode ? '#000000' : '#201515' }]}>
+          <EditorialImage
+            source={{ uri: IMAGES.intro2 }}
+            style={styles.image}
+            containerStyle={StyleSheet.absoluteFill}
+            enableOverlay={true}
+          />
+          <View style={[styles.imageOverlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.35)' }]} />
           
-          <View style={styles.progressRow}>
-            <View style={styles.fullProgress}>
-              <View style={styles.activeProgress} />
+          {/* Style Analyzed Floating Glass Card */}
+          <GlassCard style={styles.aiOverlayCard} opacity={isDarkMode ? 0.82 : 0.88}>
+            <View style={styles.aiHeader}>
+              <Cpu size={14} color={colors.primaryBurgundy} />
+              <Text style={[styles.aiHeaderText, { color: colors.primaryBurgundy }]}>STYLE ANALYZED</Text>
             </View>
-            <Text style={styles.progressPercent}>85%</Text>
-          </View>
-          <View style={styles.statusRow}>
-            <Check size={11} color={THEME.colors.primaryBurgundy} />
-            <Text style={styles.statusText}>Generating customized look...</Text>
-          </View>
-        </GlassCard>
-      </View>
-
-      {/* Bottom half: Editorial Details */}
-      <Animated.View style={[
-        styles.contentSection,
-        {
-          opacity: contentOpacity,
-          transform: [{ translateY: contentTranslateY }]
-        }
-      ]}>
-        {/* Progress Indicators */}
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar} />
-          <View style={[styles.progressBar, styles.progressBarActive]} />
-          <View style={styles.progressBar} />
+            <Text style={[styles.aiTitle, { color: colors.darkText }]}>Minimalist Chic</Text>
+            
+            <View style={styles.progressRow}>
+              <View style={[styles.fullProgress, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(139, 0, 31, 0.1)' }]}>
+                <View style={[styles.activeProgress, { backgroundColor: colors.primaryBurgundy }]} />
+              </View>
+              <Text style={[styles.progressPercent, { color: colors.primaryBurgundy }]}>85%</Text>
+            </View>
+            <View style={styles.statusRow}>
+              <Check size={11} color={colors.primaryBurgundy} />
+              <Text style={[styles.statusText, { color: colors.secondaryText }]}>Generating customized look...</Text>
+            </View>
+          </GlassCard>
         </View>
 
-        <Text style={styles.heading}>AI Outfit Suggestions</Text>
-        
-        <Text style={styles.paragraph}>
-          Let our cognitive network create tailored outfits from your digitized clothes and local atmospheric conditions. Step out in style daily.
-        </Text>
+        {/* Bottom half: Editorial Details */}
+        <Animated.View style={[
+          styles.contentSection,
+          {
+            opacity: contentOpacity,
+            transform: [{ translateY: contentTranslateY }]
+          }
+        ]}>
+          {/* Progress Indicators */}
+          <View style={styles.progressContainer}>
+            <View style={[styles.progressBar, { backgroundColor: colors.border }]} />
+            <View style={[styles.progressBar, { backgroundColor: colors.primaryBurgundy }]} />
+            <View style={[styles.progressBar, { backgroundColor: colors.border }]} />
+          </View>
 
-        <LuxuryButton
-          title="Continue"
-          onPress={() => navigation.navigate('Intro3')}
-          style={styles.ctaButton}
-        />
+          <Text style={[styles.heading, { color: colors.darkText }]}>AI Outfit Suggestions</Text>
+          
+          <Text style={[styles.paragraph, { color: colors.secondaryText }]}>
+            Let our cognitive network create tailored outfits from your digitized clothes and local atmospheric conditions. Step out in style daily.
+          </Text>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={() => navigation.navigate('Login')}
-          style={styles.skipTextContainer}
-        >
-          <Text style={styles.skipTextBottom}>Skip</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </SafeLayout>
+          <LuxuryButton
+            title="Continue"
+            onPress={() => navigation.navigate('Intro3')}
+            style={styles.ctaButton}
+          />
+
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => navigation.navigate('Login')}
+            style={styles.skipTextContainer}
+          >
+            <Text style={[styles.skipTextBottom, { color: colors.secondaryText }]}>Skip</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </SafeLayout>
+    </AmbientBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: THEME.colors.softBeigeBackground,
   },
   imageSection: {
     flex: 5.5,
-    marginHorizontal: THEME.spacing.md,
-    marginTop: THEME.spacing.md,
-    borderRadius: THEME.borderRadius.card,
+    marginHorizontal: 18,
+    marginTop: 10,
+    borderRadius: 16,
     overflow: 'hidden',
     position: 'relative',
     ...THEME.shadows.premiumDeep,
@@ -116,12 +125,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  imageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
   aiOverlayCard: {
     position: 'absolute',
-    bottom: THEME.spacing.md,
-    left: THEME.spacing.md,
-    right: THEME.spacing.md,
-    padding: THEME.spacing.md,
+    bottom: 18,
+    left: 18,
+    right: 18,
+    padding: 18,
     borderWidth: 0.5,
     borderColor: 'rgba(255, 255, 255, 0.85)',
   },
@@ -131,17 +143,17 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.xs,
   },
   aiHeaderText: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
     letterSpacing: 1.5,
-    color: THEME.colors.primaryBurgundy,
     marginLeft: 6,
+    fontWeight: '700',
   },
   aiTitle: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 18,
-    color: THEME.colors.darkText,
-    marginBottom: THEME.spacing.sm,
+    marginBottom: 10,
+    fontWeight: '700',
   },
   progressRow: {
     flexDirection: 'row',
@@ -151,81 +163,74 @@ const styles = StyleSheet.create({
   fullProgress: {
     flex: 1,
     height: 3,
-    backgroundColor: 'rgba(139, 0, 31, 0.1)',
     borderRadius: 1.5,
-    marginRight: THEME.spacing.sm,
+    marginRight: 10,
   },
   activeProgress: {
     width: '85%',
     height: '100%',
-    backgroundColor: THEME.colors.primaryBurgundy,
     borderRadius: 1.5,
   },
   progressPercent: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 9.5,
-    color: THEME.colors.primaryBurgundy,
+    fontWeight: '700',
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   statusText: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 9.5,
-    color: THEME.colors.secondaryText,
     marginLeft: 4,
+    fontWeight: '600',
   },
   contentSection: {
     flex: 4.5,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: THEME.spacing.xl,
-    paddingVertical: THEME.spacing.lg,
+    paddingHorizontal: 36,
+    paddingVertical: 28,
   },
   progressContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: THEME.spacing.md,
+    marginBottom: 18,
   },
   progressBar: {
     width: 20,
     height: 2.5,
-    backgroundColor: THEME.colors.border,
     marginHorizontal: 3,
     borderRadius: 1.5,
   },
-  progressBarActive: {
-    backgroundColor: THEME.colors.primaryBurgundy,
-  },
   heading: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 22,
-    color: THEME.colors.darkText,
     textAlign: 'center',
     letterSpacing: 0.5,
-    marginBottom: THEME.spacing.sm,
+    marginBottom: 10,
+    fontWeight: '700',
   },
   paragraph: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 12.5,
-    color: THEME.colors.secondaryText,
     textAlign: 'center',
     lineHeight: 18,
-    marginBottom: THEME.spacing.lg,
+    marginBottom: 28,
   },
   ctaButton: {
     width: '100%',
-    marginBottom: THEME.spacing.sm,
+    marginBottom: 10,
   },
   skipTextContainer: {
-    paddingVertical: THEME.spacing.xs,
+    paddingVertical: 6,
   },
   skipTextBottom: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
-    color: THEME.colors.secondaryText,
+    fontFamily: 'Georgia',
     fontSize: 11,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
+    fontWeight: '700',
   },
 });

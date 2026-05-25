@@ -3,11 +3,13 @@ import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Sparkles } from '../components/Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { IMAGES } from '../utils/mockData';
 import { GlassCard } from '../components/GlassCard';
 import { LuxuryButton } from '../components/LuxuryButton';
 import { SafeLayout } from '../components/SafeLayout';
 import { EditorialImage } from '../components/EditorialImage';
+import { AmbientBackground } from '../components/AmbientBackground';
 
 type IntroScreen1Props = {
   navigation: any;
@@ -15,6 +17,7 @@ type IntroScreen1Props = {
 
 export const IntroScreen1 = ({ navigation }: IntroScreen1Props): React.JSX.Element => {
   const insets = useSafeAreaInsets();
+  const { colors, isDarkMode } = useTheme();
   
   // Staggered text fade-up animation values
   const cardOpacity = useRef(new Animated.Value(0)).current;
@@ -42,77 +45,79 @@ export const IntroScreen1 = ({ navigation }: IntroScreen1Props): React.JSX.Eleme
   }, []);
 
   return (
-    <View style={{ flex: 1 }}>
-      {/* Editorial campaign background image */}
-      <EditorialImage
-        source={{ uri: IMAGES.intro1 }}
-        style={styles.backgroundImage}
-        containerStyle={StyleSheet.absoluteFill}
-        enableOverlay={true}
-      />
-      <View style={styles.overlay} />
+    <AmbientBackground showGlow={false}>
+      <View style={{ flex: 1 }}>
+        {/* Editorial campaign background image */}
+        <EditorialImage
+          source={{ uri: IMAGES.intro1 }}
+          style={styles.backgroundImage}
+          containerStyle={StyleSheet.absoluteFill}
+          enableOverlay={true}
+        />
+        <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.6)' }]} />
 
-      <SafeLayout
-        statusBarMode="light-content"
-        style={styles.container}
-        applyBottomInset={true}
-        applyTopInset={false} // Disable default so we can handle absolute skip button notch safely
-        backgroundColor="transparent"
-      >
-        {/* Progress Indicators */}
-        <View style={[styles.progressContainer, { marginTop: insets.top + THEME.spacing.md }]}>
-          <View style={[styles.progressBar, styles.progressBarActive]} />
-          <View style={styles.progressBar} />
-          <View style={styles.progressBar} />
-        </View>
+        <SafeLayout
+          statusBarMode="light-content"
+          style={[styles.container, { backgroundColor: 'transparent' }]}
+          applyBottomInset={true}
+          applyTopInset={false}
+          backgroundColor="transparent"
+        >
+          {/* Progress Indicators */}
+          <View style={[styles.progressContainer, { marginTop: insets.top + 18 }]}>
+            <View style={[styles.progressBar, styles.progressBarActive]} />
+            <View style={styles.progressBar} />
+            <View style={styles.progressBar} />
+          </View>
 
-        {/* Skip button at top right, fully notch-aware */}
-        <Animated.View style={{ opacity: skipOpacity }}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Login')}
-            style={[styles.skipButtonTop, { top: insets.top + THEME.spacing.sm - 4 }]}
-          >
-            <Text style={styles.skipTextTop}>Skip</Text>
-          </TouchableOpacity>
-        </Animated.View>
-
-        {/* Centered Luxury Card */}
-        <Animated.View style={[
-          styles.cardContainer,
-          {
-            opacity: cardOpacity,
-            transform: [{ translateY: cardTranslateY }]
-          }
-        ]}>
-          <GlassCard style={styles.card} opacity={0.92}>
-            <View style={styles.iconCircle}>
-              <Sparkles size={22} color={THEME.colors.primaryBurgundy} fill={THEME.colors.primaryBurgundy} />
-            </View>
-
-            <Text style={styles.heading}>Build Your Smart Wardrobe</Text>
-
-            <Text style={styles.paragraph}>
-              Step into the future of luxury styling. Curate, analyze, and optimize your personal collections with AI fabric material intelligence.
-            </Text>
-
-            <LuxuryButton
-              title="Next Journey"
-              onPress={() => navigation.navigate('Intro2')}
-              style={styles.ctaButton}
-            />
-
+          {/* Skip button at top right, fully notch-aware */}
+          <Animated.View style={{ opacity: skipOpacity }}>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => navigation.navigate('Login')}
-              style={styles.skipTextContainer}
+              style={[styles.skipButtonTop, { top: insets.top + 10 - 4 }]}
             >
-              <Text style={styles.skipTextBottom}>Skip for now</Text>
+              <Text style={styles.skipTextTop}>Skip</Text>
             </TouchableOpacity>
-          </GlassCard>
-        </Animated.View>
-      </SafeLayout>
-    </View>
+          </Animated.View>
+
+          {/* Centered Luxury Card */}
+          <Animated.View style={[
+            styles.cardContainer,
+            {
+              opacity: cardOpacity,
+              transform: [{ translateY: cardTranslateY }]
+            }
+          ]}>
+            <GlassCard style={styles.card} opacity={isDarkMode ? 0.82 : 0.92}>
+              <View style={[styles.iconCircle, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139, 0, 31, 0.05)', borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(139, 0, 31, 0.12)' }]}>
+                <Sparkles size={22} color={colors.primaryBurgundy} fill={colors.primaryBurgundy} />
+              </View>
+
+              <Text style={[styles.heading, { color: colors.darkText }]}>Build Your Smart Wardrobe</Text>
+
+              <Text style={[styles.paragraph, { color: colors.secondaryText }]}>
+                Step into the future of luxury styling. Curate, analyze, and optimize your personal collections with AI fabric material intelligence.
+              </Text>
+
+              <LuxuryButton
+                title="Next Journey"
+                onPress={() => navigation.navigate('Intro2')}
+                style={styles.ctaButton}
+              />
+
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => navigation.navigate('Login')}
+                style={styles.skipTextContainer}
+              >
+                <Text style={[styles.skipTextBottom, { color: colors.secondaryText }]}>Skip for now</Text>
+              </TouchableOpacity>
+            </GlassCard>
+          </Animated.View>
+        </SafeLayout>
+      </View>
+    </AmbientBackground>
   );
 };
 
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   overlay: {
-    ...StyleSheet.absoluteFill,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(32, 21, 21, 0.44)',
   },
   container: {
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    paddingHorizontal: THEME.spacing.xl,
+    paddingHorizontal: 36,
   },
   progressBar: {
     flex: 1,
@@ -142,74 +147,71 @@ const styles = StyleSheet.create({
     borderRadius: 1.5,
   },
   progressBarActive: {
-    backgroundColor: THEME.colors.white,
+    backgroundColor: '#FFFFFF',
   },
   skipButtonTop: {
     position: 'absolute',
-    right: THEME.spacing.lg,
-    padding: THEME.spacing.sm,
+    right: 28,
+    padding: 10,
     zIndex: 99,
   },
   skipTextTop: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
-    color: THEME.colors.white,
+    fontFamily: 'Georgia',
+    color: '#FFFFFF',
     fontSize: 10.5,
     letterSpacing: 2.0,
     textTransform: 'uppercase',
+    fontWeight: '700',
   },
   cardContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: THEME.spacing.lg,
+    paddingHorizontal: 28,
   },
   card: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: THEME.spacing.xl,
-    paddingHorizontal: THEME.spacing.lg,
+    paddingVertical: 36,
+    paddingHorizontal: 28,
     borderWidth: 0.5,
     borderColor: 'rgba(255, 255, 255, 0.85)',
-    borderRadius: THEME.borderRadius.card + 4,
+    borderRadius: 20,
   },
   iconCircle: {
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: 'rgba(139, 0, 31, 0.05)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: THEME.spacing.md,
+    marginBottom: 18,
     borderWidth: 0.5,
-    borderColor: 'rgba(139, 0, 31, 0.12)',
   },
   heading: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 22,
-    color: THEME.colors.darkText,
     textAlign: 'center',
     letterSpacing: 0.5,
     lineHeight: 30,
-    marginBottom: THEME.spacing.sm,
+    marginBottom: 10,
+    fontWeight: '700',
   },
   paragraph: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 12.5,
-    color: THEME.colors.secondaryText,
     textAlign: 'center',
     lineHeight: 18,
-    marginBottom: THEME.spacing.xl,
+    marginBottom: 36,
   },
   ctaButton: {
     width: '100%',
-    marginBottom: THEME.spacing.md,
+    marginBottom: 10,
   },
   skipTextContainer: {
-    paddingVertical: THEME.spacing.xs,
+    paddingVertical: 6,
   },
   skipTextBottom: {
-    fontFamily: THEME.typography.body.fontFamily,
-    color: THEME.colors.secondaryText,
+    fontFamily: 'Georgia',
     fontSize: 12,
     textDecorationLine: 'underline',
   },

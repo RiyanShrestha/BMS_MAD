@@ -3,6 +3,7 @@ import { StyleSheet, View, TouchableOpacity, Text, Animated, Dimensions, Vibrati
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { Home, Compass, Scan, Shirt, Sparkles } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const BAR_WIDTH = width - 32;
@@ -13,6 +14,8 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
   descriptors,
   navigation,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
   const slideAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current; // Scan pulse scale
   const pulseOpacity = useRef(new Animated.Value(0.6)).current; // Scan pulse opacity
@@ -36,8 +39,8 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
       Animated.parallel([
         Animated.sequence([
           Animated.timing(pulseAnim, {
-            toValue: 1.35,
-            duration: 1800,
+            toValue: 1.45,
+            duration: 2000,
             useNativeDriver: true,
           }),
           Animated.timing(pulseAnim, {
@@ -49,7 +52,7 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
         Animated.sequence([
           Animated.timing(pulseOpacity, {
             toValue: 0,
-            duration: 1800,
+            duration: 2000,
             useNativeDriver: true,
           }),
           Animated.timing(pulseOpacity, {
@@ -66,7 +69,7 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
 
   const getIcon = (routeName: string, color: string, focused: boolean) => {
     const size = 18;
-    const strokeWidth = focused ? 2.0 : 1.3;
+    const strokeWidth = focused ? 2.2 : 1.3;
 
     switch (routeName) {
       case 'HomeTab':
@@ -83,13 +86,25 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
                 {
                   transform: [{ scale: pulseAnim }],
                   opacity: pulseOpacity,
+                  backgroundColor: colors.gold,
                 },
               ]}
             />
-            <View style={[styles.scanCircle, focused && styles.scanCircleActive]}>
+            <View 
+              style={[
+                styles.scanCircle, 
+                { 
+                  backgroundColor: colors.primaryBurgundy,
+                  borderColor: colors.cardBackground,
+                },
+                focused && {
+                  backgroundColor: colors.darkText,
+                }
+              ]}
+            >
               <Scan
                 size={22}
-                color={focused ? THEME.colors.cardBackground : THEME.colors.white}
+                color={focused ? (isDarkMode ? colors.gold : colors.cardBackground) : '#FFFFFF'}
                 strokeWidth={2}
               />
             </View>
@@ -106,18 +121,18 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
 
   const handlePress = (routeKey: string, routeName: string, index: number, isFocused: boolean) => {
     // Soft luxury haptic vibration feedback
-    Vibration.vibrate(12);
+    Vibration.vibrate(10);
 
     // Trigger scale-down animation
     Animated.sequence([
       Animated.timing(scaleAnims[index], {
         toValue: 0.88,
-        duration: 100,
+        duration: 90,
         useNativeDriver: true,
       }),
       Animated.timing(scaleAnims[index], {
         toValue: 1.0,
-        duration: 120,
+        duration: 110,
         useNativeDriver: true,
       }),
     ]).start();
@@ -134,13 +149,25 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
   };
 
   return (
-    <View style={styles.container}>
+    <View 
+      style={[
+        styles.container, 
+        { 
+          backgroundColor: isDarkMode ? 'rgba(34, 25, 25, 0.88)' : 'rgba(255, 251, 249, 0.82)',
+          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.85)',
+          shadowColor: isDarkMode ? '#000000' : '#2B0F15',
+          shadowOpacity: isDarkMode ? 0.35 : 0.12,
+        }
+      ]}
+    >
       {/* Active Tab Background Slide Indicator */}
       <Animated.View
         style={[
           styles.indicator,
           {
             transform: [{ translateX: slideAnim }],
+            backgroundColor: isDarkMode ? 'rgba(167, 28, 53, 0.15)' : 'rgba(139, 0, 31, 0.04)',
+            borderColor: isDarkMode ? 'rgba(167, 28, 53, 0.25)' : 'rgba(139, 0, 31, 0.08)',
           },
         ]}
       />
@@ -155,8 +182,8 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
             : route.name;
 
         const isFocused = state.index === index;
-        const activeColor = THEME.colors.primaryBurgundy;
-        const inactiveColor = THEME.colors.secondaryText;
+        const activeColor = colors.primaryBurgundy;
+        const inactiveColor = colors.secondaryText;
         const color = isFocused ? activeColor : inactiveColor;
 
         const animatedStyle = {
@@ -174,13 +201,13 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
           >
             <Animated.View style={[styles.tabContent, animatedStyle]}>
               {getIcon(route.name, color, isFocused)}
-              <Text style={[styles.label, { color: color }, isFocused && styles.labelActive]}>
+              <Text style={[styles.label, { color: color }, isFocused && { color: colors.primaryBurgundy }]}>
                 {label.toString().toUpperCase()}
               </Text>
               
               {/* Active Tab Ambient Dot Glow */}
               {isFocused && route.name !== 'Scan' && (
-                <View style={styles.activeDot} />
+                <View style={[styles.activeDot, { backgroundColor: colors.primaryBurgundy }]} />
               )}
             </Animated.View>
           </TouchableOpacity>
@@ -198,13 +225,12 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     height: 68,
-    backgroundColor: 'rgba(255, 251, 249, 0.82)', // Translucent ivory glass
-    borderRadius: THEME.borderRadius.pill,
+    borderRadius: 34,
     borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.85)',
     alignItems: 'center',
     paddingHorizontal: 0,
-    ...THEME.shadows.premiumDeep,
+    shadowOffset: { width: 0, height: 16 },
+    shadowRadius: 32,
     elevation: 8,
   },
   indicator: {
@@ -213,10 +239,8 @@ const styles = StyleSheet.create({
     left: 6,
     width: TAB_WIDTH - 12,
     height: 56,
-    backgroundColor: 'rgba(139, 0, 31, 0.04)', // Warm pinkish highlight
     borderRadius: 28,
     borderWidth: 0.5,
-    borderColor: 'rgba(139, 0, 31, 0.08)',
   },
   tabItem: {
     flex: 1,
@@ -230,20 +254,17 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   label: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8,
     letterSpacing: 1.2,
     marginTop: 4,
     textTransform: 'uppercase',
-  },
-  labelActive: {
-    color: THEME.colors.primaryBurgundy,
+    fontWeight: '600',
   },
   activeDot: {
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: THEME.colors.primaryBurgundy,
     position: 'absolute',
     bottom: -8,
   },
@@ -260,7 +281,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: THEME.colors.gold,
     zIndex: -1,
   },
   scanCircle: {
@@ -269,15 +289,13 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: THEME.colors.primaryBurgundy,
     justifyContent: 'center',
     alignItems: 'center',
-    ...THEME.shadows.premiumDeep,
     borderWidth: 1.5,
-    borderColor: '#FFFBF9',
-  },
-  scanCircleActive: {
-    backgroundColor: THEME.colors.darkText,
-    borderColor: '#FFFBF9',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
   },
 });

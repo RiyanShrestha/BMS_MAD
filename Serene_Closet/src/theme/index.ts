@@ -57,6 +57,13 @@ export const THEME = {
       letterSpacing: 0.3,
       color: '#201515',
     },
+    uppercase: {
+      fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif-medium',
+      fontWeight: '600' as const,
+      letterSpacing: 2.5,
+      textTransform: 'uppercase' as const,
+      color: '#7E6E6A',
+    },
   },
   spacing: {
     xs: 6,
@@ -87,6 +94,13 @@ export const THEME = {
       shadowRadius: 28,
       elevation: 6,
     },
+    warm: {
+      shadowColor: '#8B001F',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.04,
+      shadowRadius: 20,
+      elevation: 3,
+    },
   },
   motion: {
     durations: {
@@ -96,6 +110,21 @@ export const THEME = {
     },
     easing: {
       luxuryBezier: [0.25, 0.1, 0.25, 1] as [number, number, number, number], // calm ease-in-out curve
-    }
+    },
+    stagger: {
+      sectionDelay: 120,
+      cardDelay: 80,
+    },
+    spring: {
+      press: { friction: 8, tension: 100 },
+      gentle: { friction: 12, tension: 40 },
+    },
+  },
+  atmosphere: {
+    ambientGradient: { start: '#FAF5F2', end: '#EFE3DF' },
+    vignette: 'rgba(32, 21, 21, 0.03)',
+    filmGrain: 'rgba(32, 21, 21, 0.015)',
+    heroGlow: 'rgba(212, 175, 55, 0.06)',
+    scannerVignette: 'rgba(0, 0, 0, 0.35)',
   }
 };

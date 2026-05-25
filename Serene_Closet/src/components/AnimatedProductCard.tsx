@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Animated, Vibration } from 'react-native';
 import { Heart } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { EditorialImage } from './EditorialImage';
 
 const { width } = Dimensions.get('window');
@@ -25,6 +26,7 @@ export const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
   onPress,
   index = 0,
 }) => {
+  const { colors, isDarkMode } = useTheme();
   const [isLiked, setIsLiked] = React.useState(false);
   
   // Animation values
@@ -93,7 +95,13 @@ export const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         onPress={handlePress}
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            backgroundColor: colors.cardBackground,
+            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.85)',
+          }
+        ]}
       >
         <View style={styles.imageContainer}>
           <EditorialImage
@@ -105,19 +113,25 @@ export const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={handleLike}
-            style={styles.likeButton}
+            style={[
+              styles.likeButton,
+              {
+                backgroundColor: isDarkMode ? 'rgba(34, 25, 25, 0.92)' : 'rgba(255, 255, 255, 0.9)',
+                borderColor: colors.border,
+              }
+            ]}
           >
             <Heart
               size={13}
-              color={isLiked ? THEME.colors.primaryBurgundy : THEME.colors.secondaryText}
-              fill={isLiked ? THEME.colors.primaryBurgundy : 'transparent'}
+              color={isLiked ? colors.primaryBurgundy : colors.secondaryText}
+              fill={isLiked ? colors.primaryBurgundy : 'transparent'}
             />
           </TouchableOpacity>
         </View>
         <View style={styles.info}>
-          <Text style={styles.category}>{category}</Text>
-          <Text style={styles.title} numberOfLines={1}>{title}</Text>
-          <Text style={styles.price}>{price}</Text>
+          <Text style={[styles.category, { color: colors.secondaryText }]}>{category}</Text>
+          <Text style={[styles.title, { color: colors.darkText }]} numberOfLines={1}>{title}</Text>
+          <Text style={[styles.price, { color: colors.primaryBurgundy }]}>{price}</Text>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -131,10 +145,8 @@ const styles = StyleSheet.create({
   },
   container: {
     width: '100%',
-    backgroundColor: THEME.colors.cardBackground,
     borderRadius: THEME.borderRadius.card,
     borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.85)',
     padding: THEME.spacing.sm,
     ...THEME.shadows.premium,
   },
@@ -156,11 +168,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 0.5,
-    borderColor: THEME.colors.border,
   },
   info: {
     paddingVertical: THEME.spacing.sm,
@@ -170,21 +180,18 @@ const styles = StyleSheet.create({
     fontFamily: THEME.typography.bodyBold.fontFamily,
     fontSize: 8,
     letterSpacing: 1.5,
-    color: THEME.colors.secondaryText,
     textTransform: 'uppercase',
     marginBottom: 2,
   },
   title: {
     fontFamily: THEME.typography.heading.fontFamily,
     fontSize: 13.5,
-    color: THEME.colors.darkText,
     marginBottom: 4,
     letterSpacing: 0.2,
   },
   price: {
     fontFamily: THEME.typography.bodyBold.fontFamily,
     fontSize: 12,
-    color: THEME.colors.primaryBurgundy,
     letterSpacing: 0.5,
   },
 });

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ViewStyle, Vibration } from 'react-native';
 import { Sparkles, ArrowRight } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { GlassCard } from './GlassCard';
 import { EditorialImage } from './EditorialImage';
 
@@ -20,6 +21,8 @@ export const AIRecommendationCard: React.FC<AIRecommendationCardProps> = ({
   onPress,
   style,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
   const handlePress = () => {
     Vibration.vibrate(10);
     if (onPress) onPress();
@@ -29,7 +32,15 @@ export const AIRecommendationCard: React.FC<AIRecommendationCardProps> = ({
     <TouchableOpacity
       activeOpacity={0.96}
       onPress={handlePress}
-      style={[styles.container, style]}
+      style={[
+        styles.container, 
+        { 
+          backgroundColor: colors.cardBackground, 
+          borderColor: colors.border,
+          shadowColor: isDarkMode ? '#000000' : '#201515',
+        }, 
+        style
+      ]}
     >
       <View style={styles.imageContainer}>
         <EditorialImage
@@ -38,18 +49,18 @@ export const AIRecommendationCard: React.FC<AIRecommendationCardProps> = ({
           containerStyle={StyleSheet.absoluteFill}
           enableOverlay={true}
         />
-        <View style={styles.gradientOverlay} />
+        <View style={[styles.gradientOverlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.35)' }]} />
         
-        <GlassCard style={styles.floatingCard} opacity={0.88}>
+        <GlassCard style={styles.floatingCard} opacity={isDarkMode ? 0.82 : 0.88}>
           <View style={styles.badgeContainer}>
-            <Sparkles size={11} color={THEME.colors.primaryBurgundy} fill={THEME.colors.primaryBurgundy} />
-            <Text style={styles.badgeText}>AI STYLIST PICK</Text>
+            <Sparkles size={11} color={colors.primaryBurgundy} fill={colors.primaryBurgundy} />
+            <Text style={[styles.badgeText, { color: colors.primaryBurgundy }]}>AI STYLIST PICK</Text>
           </View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
+          <Text style={[styles.title, { color: colors.darkText }]}>{title}</Text>
+          <Text style={[styles.subtitle, { color: colors.secondaryText }]}>{subtitle}</Text>
           <View style={styles.actionContainer}>
-            <Text style={styles.actionText}>Discover details</Text>
-            <ArrowRight size={11} color={THEME.colors.primaryBurgundy} />
+            <Text style={[styles.actionText, { color: colors.primaryBurgundy }]}>Discover details</Text>
+            <ArrowRight size={11} color={colors.primaryBurgundy} />
           </View>
         </GlassCard>
       </View>
@@ -62,9 +73,7 @@ const styles = StyleSheet.create({
     marginHorizontal: THEME.spacing.md,
     borderRadius: THEME.borderRadius.card,
     overflow: 'hidden',
-    backgroundColor: THEME.colors.cardBackground,
     borderWidth: 0.5,
-    borderColor: THEME.colors.border,
     ...THEME.shadows.premiumDeep,
     marginBottom: THEME.spacing.lg,
   },
@@ -79,13 +88,13 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   gradientOverlay: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(32, 21, 21, 0.22)', // Subtle warm luxury campaign overlay
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(32, 21, 21, 0.22)',
   },
   floatingCard: {
     margin: THEME.spacing.md,
     padding: THEME.spacing.md,
-    borderRadius: THEME.borderRadius.card - 4,
+    borderRadius: 12,
     borderWidth: 0.5,
     borderColor: 'rgba(255, 255, 255, 0.85)',
     ...THEME.shadows.premiumDeep,
@@ -96,22 +105,21 @@ const styles = StyleSheet.create({
     marginBottom: THEME.spacing.xs,
   },
   badgeText: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
     letterSpacing: 1.5,
-    color: THEME.colors.primaryBurgundy,
     marginLeft: 6,
+    fontWeight: '700',
   },
   title: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 20,
-    color: THEME.colors.darkText,
     marginBottom: 2,
+    fontWeight: '700',
   },
   subtitle: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 11.5,
-    color: THEME.colors.secondaryText,
     marginBottom: THEME.spacing.sm,
   },
   actionContainer: {
@@ -119,11 +127,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   actionText: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 10,
-    color: THEME.colors.primaryBurgundy,
     letterSpacing: 1.2,
     textTransform: 'uppercase',
     marginRight: 6,
+    fontWeight: '700',
   },
 });

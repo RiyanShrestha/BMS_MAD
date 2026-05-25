@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, TextInput, View, TouchableOpacity, ViewStyle } from 'react-native';
 import { Search, SlidersHorizontal } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -18,14 +19,21 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onFilterPress,
   style,
 }) => {
+  const { colors } = useTheme();
+
+  const dynamicInputStyle = {
+    backgroundColor: colors.cardBackground,
+    borderColor: colors.border,
+  };
+
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.searchSection}>
-        <Search size={18} color={THEME.colors.secondaryText} style={styles.searchIcon} />
+      <View style={[styles.searchSection, dynamicInputStyle]}>
+        <Search size={18} color={colors.secondaryText} style={styles.searchIcon} />
         <TextInput
-          style={styles.input}
+          style={[styles.input, { color: colors.darkText }]}
           placeholder={placeholder}
-          placeholderTextColor={THEME.colors.secondaryText}
+          placeholderTextColor={colors.secondaryText}
           value={value}
           onChangeText={onChangeText}
         />
@@ -34,9 +42,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={onFilterPress}
-          style={styles.filterButton}
+          style={[styles.filterButton, dynamicInputStyle]}
         >
-          <SlidersHorizontal size={18} color={THEME.colors.primaryBurgundy} />
+          <SlidersHorizontal size={18} color={colors.primaryBurgundy} />
         </TouchableOpacity>
       )}
     </View>
@@ -55,10 +63,8 @@ const styles = StyleSheet.create({
     height: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: THEME.colors.cardBackground,
-    borderRadius: THEME.borderRadius.pill,
+    borderRadius: 25,
     borderWidth: 1,
-    borderColor: THEME.colors.border,
     paddingHorizontal: THEME.spacing.md,
     ...THEME.shadows.premium,
   },
@@ -67,18 +73,15 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 14,
-    color: THEME.colors.darkText,
     padding: 0,
   },
   filterButton: {
     width: 50,
     height: 50,
-    borderRadius: THEME.borderRadius.pill,
-    backgroundColor: THEME.colors.cardBackground,
+    borderRadius: 25,
     borderWidth: 1,
-    borderColor: THEME.colors.border,
     marginLeft: THEME.spacing.sm,
     justifyContent: 'center',
     alignItems: 'center',

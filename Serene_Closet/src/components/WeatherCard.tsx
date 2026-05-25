@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, ViewStyle, Vibration } from 'react-native';
 import { CloudSun, ArrowRight } from './Icons';
 import { THEME } from '../theme';
+import { useTheme } from '../theme/ThemeContext';
 import { GlassCard } from './GlassCard';
 import { LuxuryButton } from './LuxuryButton';
 
@@ -22,25 +23,27 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
   onActionPress,
   style,
 }) => {
+  const { colors, isDarkMode } = useTheme();
+
   const handleAction = () => {
     Vibration.vibrate(10);
     if (onActionPress) onActionPress();
   };
 
   return (
-    <GlassCard style={[styles.container, style]} opacity={0.78}>
+    <GlassCard style={[styles.container, style]} opacity={isDarkMode ? 0.85 : 0.78}>
       <View style={styles.header}>
         <View>
-          <Text style={styles.location}>{location.toUpperCase()} • {temperature}</Text>
-          <Text style={styles.condition}>{condition}</Text>
+          <Text style={[styles.location, { color: colors.darkText }]}>{location.toUpperCase()} • {temperature}</Text>
+          <Text style={[styles.condition, { color: colors.primaryBurgundy }]}>{condition}</Text>
         </View>
-        <CloudSun size={26} color={THEME.colors.primaryBurgundy} strokeWidth={1.5} />
+        <CloudSun size={26} color={colors.primaryBurgundy} strokeWidth={1.5} />
       </View>
       
-      <View style={styles.divider} />
+      <View style={[styles.divider, { backgroundColor: colors.border }]} />
 
-      <Text style={styles.tipTitle}>AI DAILY RECOMMENDATION</Text>
-      <Text style={styles.recommendationText}>{recommendation}</Text>
+      <Text style={[styles.tipTitle, { color: colors.secondaryText }]}>AI DAILY RECOMMENDATION</Text>
+      <Text style={[styles.recommendationText, { color: colors.darkText }]}>{recommendation}</Text>
 
       {onActionPress && (
         <LuxuryButton
@@ -49,7 +52,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = ({
           variant="outline"
           style={styles.button}
           textStyle={styles.buttonText}
-          icon={<ArrowRight size={13} color={THEME.colors.primaryBurgundy} style={{ marginRight: 4 }} />}
+          icon={<ArrowRight size={13} color={colors.primaryBurgundy} style={{ marginRight: 4 }} />}
         />
       )}
     </GlassCard>
@@ -70,41 +73,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   location: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 10.5,
-    color: THEME.colors.darkText,
     letterSpacing: 1.5,
+    fontWeight: '600',
   },
   condition: {
-    fontFamily: THEME.typography.heading.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 20,
-    color: THEME.colors.primaryBurgundy,
     marginTop: THEME.spacing.xs,
+    fontWeight: '700',
   },
   divider: {
     height: 0.5,
-    backgroundColor: THEME.colors.border,
     marginVertical: THEME.spacing.md,
-    opacity: 0.6,
+    opacity: 0.4,
   },
   tipTitle: {
-    fontFamily: THEME.typography.bodyBold.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 8.5,
-    color: THEME.colors.secondaryText,
     letterSpacing: 1.8,
     marginBottom: THEME.spacing.xs,
     textTransform: 'uppercase',
+    fontWeight: '700',
   },
   recommendationText: {
-    fontFamily: THEME.typography.body.fontFamily,
+    fontFamily: 'Georgia',
     fontSize: 12.5,
-    color: THEME.colors.darkText,
     lineHeight: 18,
   },
   button: {
     height: 38,
     marginTop: THEME.spacing.md,
-    borderRadius: THEME.borderRadius.button,
+    borderRadius: 8,
     alignSelf: 'flex-start',
     paddingHorizontal: THEME.spacing.md,
   },
