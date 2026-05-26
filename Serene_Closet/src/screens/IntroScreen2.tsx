@@ -38,14 +38,14 @@ export const IntroScreen2 = ({ navigation }: any) => {
         applyBottomInset={true}
       >
         {/* Top half: Cinematic Fashion Image with AI floating overlay */}
-        <View style={[styles.imageSection, { shadowColor: isDarkMode ? '#000000' : '#201515' }]}>
+        <View style={[styles.imageSection, { shadowColor: isDarkMode ? '#000000' : '#051F20' }]}>
           <EditorialImage
             source={{ uri: IMAGES.intro2 }}
             style={styles.image}
             containerStyle={StyleSheet.absoluteFill}
             enableOverlay={true}
           />
-          <View style={[styles.imageOverlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.35)' }]} />
+          <View style={[styles.imageOverlay, isDarkMode && { backgroundColor: 'rgba(5, 31, 32, 0.35)' }]} />
           
           {/* Style Analyzed Floating Glass Card */}
           <GlassCard style={styles.aiOverlayCard} opacity={isDarkMode ? 0.82 : 0.88}>
@@ -56,7 +56,7 @@ export const IntroScreen2 = ({ navigation }: any) => {
             <Text style={[styles.aiTitle, { color: colors.darkText }]}>Minimalist Chic</Text>
             
             <View style={styles.progressRow}>
-              <View style={[styles.fullProgress, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(139, 0, 31, 0.1)' }]}>
+              <View style={[styles.fullProgress, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(22, 56, 50, 0.1)' }]}>
                 <View style={[styles.activeProgress, { backgroundColor: colors.primaryBurgundy }]} />
               </View>
               <Text style={[styles.progressPercent, { color: colors.primaryBurgundy }]}>85%</Text>

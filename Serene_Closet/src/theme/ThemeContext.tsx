@@ -47,10 +47,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const activeAtmosphere = isDarkMode
     ? {
-        ambientGradient: { start: '#120C0C', end: '#0A0606' }, // charcoal base
-        vignette: 'rgba(10, 5, 5, 0.45)', // smoky vignettes
+        ambientGradient: { start: '#051F20', end: '#010B09' }, // deep dark emerald base
+        vignette: 'rgba(1, 11, 9, 0.52)', // smoky green vignette
         filmGrain: 'rgba(255, 255, 255, 0.012)', // subtle white grain for dark screens
-        heroGlow: 'rgba(167, 28, 53, 0.12)', // deep wine red overlay glow
+        heroGlow: 'rgba(35, 83, 71, 0.18)', // muted emerald glow
         scannerVignette: 'rgba(0, 0, 0, 0.65)',
       }
     : THEME.atmosphere;

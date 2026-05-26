@@ -22,9 +22,7 @@ export const AmbientBackground: React.FC<AmbientBackgroundProps> = ({
   const endColor = theme.atmosphere.ambientGradient.end;
 
   // Cinematic glow colors depending on dark/light mode
-  const glowColors = isDarkMode
-    ? ['rgba(167, 28, 53, 0.16)', 'rgba(167, 28, 53, 0.0)'] // deep wine red atmospheric backlighting
-    : ['rgba(212, 175, 55, 0.08)', 'rgba(212, 175, 55, 0.0)']; // warm gold backlighting
+  const glowColors = [theme.atmosphere.heroGlow, 'transparent'];
 
   return (
     <View style={[styles.container, style]}>
@@ -38,12 +36,12 @@ export const AmbientBackground: React.FC<AmbientBackgroundProps> = ({
       
       {/* Cinematic Vignettes using smooth gradients */}
       <LinearGradient
-        colors={[isDarkMode ? 'rgba(0,0,0,0.65)' : 'rgba(32, 21, 21, 0.06)', 'transparent']}
+        colors={[isDarkMode ? 'rgba(5, 31, 32, 0.65)' : 'rgba(5, 31, 32, 0.06)', 'transparent']}
         style={styles.vignetteTop}
         pointerEvents="none"
       />
       <LinearGradient
-        colors={['transparent', isDarkMode ? 'rgba(0,0,0,0.85)' : 'rgba(32, 21, 21, 0.09)']}
+        colors={['transparent', isDarkMode ? 'rgba(5, 31, 32, 0.85)' : 'rgba(5, 31, 32, 0.09)']}
         style={styles.vignetteBottom}
         pointerEvents="none"
       />

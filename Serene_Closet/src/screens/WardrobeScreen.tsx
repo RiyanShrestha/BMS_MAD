@@ -90,7 +90,7 @@ export const WardrobeScreen = ({ navigation }: any) => {
             <TouchableOpacity
               activeOpacity={0.94}
               onPress={handleGenerate}
-              style={[styles.generateCard, { shadowColor: isDarkMode ? '#000000' : '#2B0F15' }]}
+              style={[styles.generateCard, { shadowColor: isDarkMode ? '#000000' : '#051F20' }]}
             >
               <EditorialImage
                 source={{ uri: IMAGES.abstractWardrobe }}
@@ -132,7 +132,7 @@ export const WardrobeScreen = ({ navigation }: any) => {
                   <Text style={[styles.utilityLabel, { color: colors.secondaryText }]}>WARDROBE UTILITY</Text>
                   <Text style={[styles.utilityVal, { color: colors.primaryBurgundy }]}>72% Optimized</Text>
                 </View>
-                <View style={[styles.utilityTrack, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(139, 0, 31, 0.06)' }]}>
+                <View style={[styles.utilityTrack, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.06)' : 'rgba(22, 56, 50, 0.06)' }]}>
                   <Animated.View style={[
                     styles.utilityBar,
                     { 
@@ -155,11 +155,11 @@ export const WardrobeScreen = ({ navigation }: any) => {
                 {
                   backgroundColor: colors.cardBackground,
                   borderColor: colors.border,
-                  shadowColor: isDarkMode ? '#000000' : '#201515',
+                  shadowColor: isDarkMode ? '#000000' : '#051F20',
                 }
               ]}
             >
-              <View style={[styles.captureIconCircle, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139, 0, 31, 0.05)', borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(139, 0, 31, 0.12)' }]}>
+              <View style={[styles.captureIconCircle, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(22, 56, 50, 0.05)', borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(22, 56, 50, 0.12)' }]}>
                 <Plus size={18} color={colors.primaryBurgundy} />
               </View>
               <View style={styles.captureTextMeta}>
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   generateCardOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(32, 21, 21, 0.32)',
+    backgroundColor: 'rgba(5, 31, 32, 0.32)',
   },
   generateInnerCard: {
     margin: 18,

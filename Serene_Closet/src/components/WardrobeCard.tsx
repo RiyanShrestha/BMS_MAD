@@ -41,7 +41,7 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
         {
           backgroundColor: colors.cardBackground,
           borderColor: colors.border,
-          shadowColor: isDarkMode ? '#000000' : '#201515',
+          shadowColor: isDarkMode ? '#000000' : '#051F20',
         }
       ]}
     >
@@ -52,8 +52,8 @@ export const WardrobeCard: React.FC<WardrobeCardProps> = ({
           containerStyle={StyleSheet.absoluteFill}
           enableOverlay={true}
         />
-        <View style={[styles.wearBadge, { backgroundColor: isDarkMode ? 'rgba(10, 6, 6, 0.72)' : 'rgba(32, 21, 21, 0.72)' }]}>
-          <Text style={[styles.wearCount, { color: isDarkMode ? '#FAF5F2' : colors.cardBackground }]}>{wearCount} wears</Text>
+        <View style={[styles.wearBadge, { backgroundColor: isDarkMode ? 'rgba(11, 43, 38, 0.72)' : 'rgba(5, 31, 32, 0.72)' }]}>
+          <Text style={[styles.wearCount, { color: isDarkMode ? '#DAF1DE' : colors.cardBackground }]}>{wearCount} wears</Text>
         </View>
       </View>
       <View style={styles.info}>

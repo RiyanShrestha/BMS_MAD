@@ -11,7 +11,7 @@ interface EditorialImageProps extends ImageProps {
 export const EditorialImage: React.FC<EditorialImageProps> = ({
   style,
   containerStyle,
-  overlayColor = 'rgba(212, 175, 55, 0.05)',
+  overlayColor = 'rgba(142, 182, 155, 0.05)', // Soft Sage tint overlay
   enableOverlay = true,
   ...props
 }) => {
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   },
   placeholder: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#EDE6E0',
+    backgroundColor: '#DAF1DE', // Luxury Mint Background
   },
   roundedOverlay: {
     mixBlendMode: 'multiply' as any,
@@ -102,11 +102,11 @@ const styles = StyleSheet.create({
   vignette: {
     backgroundColor: 'transparent',
     borderWidth: 20,
-    borderColor: 'rgba(32, 21, 21, 0.025)',
+    borderColor: 'rgba(5, 31, 32, 0.025)', // Primary Dark overlay
   },
   innerShadow: {
     borderWidth: 0.5,
-    borderColor: 'rgba(32, 21, 21, 0.04)',
+    borderColor: 'rgba(5, 31, 32, 0.04)', // Primary Dark overlay
     borderRadius: 2,
   },
 });

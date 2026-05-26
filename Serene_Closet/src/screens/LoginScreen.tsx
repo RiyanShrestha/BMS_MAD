@@ -58,7 +58,7 @@ export const LoginScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: isDarkMode ? '#140F0F' : colors.softBeigeBackground }}>
+    <View style={{ flex: 1, backgroundColor: colors.softBeigeBackground }}>
       {/* Editorial campaign bg */}
       <EditorialImage
         source={{ uri: IMAGES.loginBg }}
@@ -66,7 +66,7 @@ export const LoginScreen = ({ navigation }: any) => {
         containerStyle={StyleSheet.absoluteFill}
         enableOverlay={true}
       />
-      <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.6)' }]} />
+      <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(5, 31, 32, 0.6)' }]} />
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
       
       <KeyboardAvoidingView
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(32, 21, 21, 0.46)',
+    backgroundColor: 'rgba(5, 31, 32, 0.46)',
   },
   scrollContainer: {
     flexGrow: 1,

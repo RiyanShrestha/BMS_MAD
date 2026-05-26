@@ -260,7 +260,7 @@ export const ScanScreen = ({ navigation }: ScanScreenProps): React.JSX.Element =
         containerStyle={StyleSheet.absoluteFill}
         enableOverlay={true}
       />
-      <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.72)' }]} />
+      <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(5, 31, 32, 0.72)' }]} />
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent={true} />
 
       {/* Atmospheric Scanning vignette layer */}
@@ -269,7 +269,7 @@ export const ScanScreen = ({ navigation }: ScanScreenProps): React.JSX.Element =
           styles.scanVignette, 
           { 
             opacity: scanVignetteOpacity,
-            backgroundColor: isDarkMode ? 'rgba(167, 28, 53, 0.08)' : 'rgba(32, 21, 21, 0.12)' 
+            backgroundColor: isDarkMode ? 'rgba(35, 83, 71, 0.12)' : 'rgba(22, 56, 50, 0.08)' 
           }
         ]} 
         pointerEvents="none" 
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(20, 15, 15, 0.48)',
+    backgroundColor: 'rgba(5, 31, 32, 0.48)',
   },
   scanVignette: {
     ...StyleSheet.absoluteFillObject,
@@ -640,17 +640,17 @@ const styles = StyleSheet.create({
     borderColor: '#FFF',
   },
   nodeCard: {
-    backgroundColor: 'rgba(20, 15, 15, 0.85)',
+    backgroundColor: 'rgba(11, 43, 38, 0.92)',
     paddingHorizontal: 6,
     paddingVertical: 3,
     borderRadius: 4,
     marginLeft: 6,
     borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    borderColor: 'rgba(142, 182, 155, 0.25)',
   },
   nodeLabel: {
     fontFamily: 'Georgia',
-    color: '#FFF',
+    color: '#DAF1DE',
     fontSize: 6.5,
     letterSpacing: 0.5,
     fontWeight: '600',
@@ -669,12 +669,12 @@ const styles = StyleSheet.create({
     top: '38%',
     alignSelf: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(20, 15, 15, 0.72)',
+    backgroundColor: 'rgba(11, 43, 38, 0.92)',
     paddingVertical: 10,
     paddingHorizontal: 18,
     borderRadius: 8,
     borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(142, 182, 155, 0.2)',
   },
   counterVal: {
     fontFamily: 'Georgia',

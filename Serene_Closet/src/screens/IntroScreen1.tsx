@@ -54,7 +54,7 @@ export const IntroScreen1 = ({ navigation }: IntroScreen1Props): React.JSX.Eleme
           containerStyle={StyleSheet.absoluteFill}
           enableOverlay={true}
         />
-        <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(10, 6, 6, 0.6)' }]} />
+        <View style={[styles.overlay, isDarkMode && { backgroundColor: 'rgba(5, 31, 32, 0.6)' }]} />
 
         <SafeLayout
           statusBarMode="light-content"
@@ -90,7 +90,7 @@ export const IntroScreen1 = ({ navigation }: IntroScreen1Props): React.JSX.Eleme
             }
           ]}>
             <GlassCard style={styles.card} opacity={isDarkMode ? 0.82 : 0.92}>
-              <View style={[styles.iconCircle, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(139, 0, 31, 0.05)', borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(139, 0, 31, 0.12)' }]}>
+              <View style={[styles.iconCircle, { backgroundColor: isDarkMode ? 'rgba(255,255,255,0.05)' : 'rgba(22, 56, 50, 0.05)', borderColor: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(22, 56, 50, 0.12)' }]}>
                 <Sparkles size={22} color={colors.primaryBurgundy} fill={colors.primaryBurgundy} />
               </View>
 
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(32, 21, 21, 0.44)',
+    backgroundColor: 'rgba(5, 31, 32, 0.44)',
   },
   container: {
     flex: 1,

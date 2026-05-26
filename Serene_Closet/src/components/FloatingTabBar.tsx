@@ -153,9 +153,9 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
       style={[
         styles.container, 
         { 
-          backgroundColor: isDarkMode ? 'rgba(34, 25, 25, 0.88)' : 'rgba(255, 251, 249, 0.82)',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.85)',
-          shadowColor: isDarkMode ? '#000000' : '#2B0F15',
+          backgroundColor: isDarkMode ? 'rgba(11, 43, 38, 0.88)' : 'rgba(218, 241, 222, 0.82)',
+          borderColor: isDarkMode ? 'rgba(142, 182, 155, 0.12)' : 'rgba(255, 255, 255, 0.85)',
+          shadowColor: isDarkMode ? '#000000' : '#051F20',
           shadowOpacity: isDarkMode ? 0.35 : 0.12,
         }
       ]}
@@ -166,8 +166,8 @@ export const FloatingTabBar: React.FC<BottomTabBarProps> = ({
           styles.indicator,
           {
             transform: [{ translateX: slideAnim }],
-            backgroundColor: isDarkMode ? 'rgba(167, 28, 53, 0.15)' : 'rgba(139, 0, 31, 0.04)',
-            borderColor: isDarkMode ? 'rgba(167, 28, 53, 0.25)' : 'rgba(139, 0, 31, 0.08)',
+            backgroundColor: isDarkMode ? 'rgba(35, 83, 71, 0.18)' : 'rgba(22, 56, 50, 0.06)',
+            borderColor: isDarkMode ? 'rgba(35, 83, 71, 0.28)' : 'rgba(22, 56, 50, 0.1)',
           },
         ]}
       />

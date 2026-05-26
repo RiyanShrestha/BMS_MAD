@@ -2,35 +2,35 @@ import { Platform } from 'react-native';
 
 export const THEME = {
   colors: {
-    // Light Mode - Warm Ivory & Velvet Burgundy
-    primaryBurgundy: '#8B001F',
-    softBeigeBackground: '#FAF5F2',
-    cardBackground: '#FFFBF9',
-    darkText: '#201515',
-    secondaryText: '#7E6E6A',
-    border: '#EAE0DC',
-    borderLight: 'rgba(234, 224, 220, 0.4)',
-    whiteGlass: 'rgba(255, 255, 255, 0.7)',
-    shadow: 'rgba(32, 21, 21, 0.05)',
+    // Light Mode - Deep Emerald & Luxury Mint
+    primaryBurgundy: '#163832', // Deep Emerald
+    softBeigeBackground: '#DAF1DE', // Luxury Mint Background
+    cardBackground: '#DAF1DE', // Luxury Mint Card
+    darkText: '#051F20', // Primary Dark
+    secondaryText: '#235347', // Muted Emerald
+    border: '#8EB69B', // Soft Sage
+    borderLight: 'rgba(142, 182, 155, 0.35)',
+    whiteGlass: 'rgba(218, 241, 222, 0.72)',
+    shadow: 'rgba(5, 31, 32, 0.06)',
     white: '#FFFFFF',
     transparent: 'transparent',
-    overlay: 'rgba(32, 21, 21, 0.4)',
-    overlayDark: 'rgba(32, 21, 21, 0.65)',
-    gold: '#D4AF37',
-    dustyRose: '#C8A2C8',
+    overlay: 'rgba(5, 31, 32, 0.4)',
+    overlayDark: 'rgba(5, 31, 32, 0.65)',
+    gold: '#8EB69B', // Soft Sage
+    dustyRose: '#8EB69B',
 
-    // Dark Mode - Deep Charcoal & Wine Red
+    // Dark Mode - Deep Emerald & Botanical Dark
     dark: {
-      background: '#140F0F',
-      card: '#221919',
-      primaryBurgundy: '#A71C35',
-      darkText: '#FAF5F2',
-      secondaryText: '#A59591',
-      border: '#3D3131',
-      borderLight: 'rgba(61, 49, 49, 0.3)',
-      whiteGlass: 'rgba(34, 25, 25, 0.7)',
-      shadow: 'rgba(0, 0, 0, 0.3)',
-      gold: '#E5C158',
+      background: '#051F20', // Primary Dark
+      card: '#0B2B26', // Elevated Surface / Secondary Dark
+      primaryBurgundy: '#235347', // Muted Emerald Accent
+      darkText: '#DAF1DE', // Dark Mode Headline (Luxury Mint)
+      secondaryText: '#8EB69B', // Soft Sage Highlight
+      border: '#163832', // Deep Emerald
+      borderLight: 'rgba(22, 56, 50, 0.3)',
+      whiteGlass: 'rgba(11, 43, 38, 0.72)',
+      shadow: 'rgba(0, 0, 0, 0.4)',
+      gold: '#8EB69B', // Soft Sage
     }
   },
   typography: {
@@ -38,31 +38,31 @@ export const THEME = {
       fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif',
       fontWeight: '700' as const,
       letterSpacing: 0.8,
-      color: '#201515',
+      color: '#051F20',
     },
     headingLight: {
       fontFamily: Platform.OS === 'ios' ? 'Georgia' : 'serif',
       fontWeight: '300' as const,
       letterSpacing: 1.2,
-      color: '#201515',
+      color: '#051F20',
     },
     body: {
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif-light',
       letterSpacing: 0.3,
-      color: '#7E6E6A',
+      color: '#235347',
     },
     bodyBold: {
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif-medium',
       fontWeight: '600' as const,
       letterSpacing: 0.3,
-      color: '#201515',
+      color: '#051F20',
     },
     uppercase: {
       fontFamily: Platform.OS === 'ios' ? 'System' : 'sans-serif-medium',
       fontWeight: '600' as const,
       letterSpacing: 2.5,
       textTransform: 'uppercase' as const,
-      color: '#7E6E6A',
+      color: '#235347',
     },
   },
   spacing: {
@@ -81,35 +81,35 @@ export const THEME = {
   },
   shadows: {
     premium: {
-      shadowColor: '#201515',
+      shadowColor: '#051F20',
       shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.05,
+      shadowOpacity: 0.06,
       shadowRadius: 18,
       elevation: 2,
     },
     premiumDeep: {
-      shadowColor: '#000000',
+      shadowColor: '#051F20',
       shadowOffset: { width: 0, height: 12 },
-      shadowOpacity: 0.08,
+      shadowOpacity: 0.12,
       shadowRadius: 28,
       elevation: 6,
     },
     warm: {
-      shadowColor: '#8B001F',
+      shadowColor: '#163832',
       shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.04,
+      shadowOpacity: 0.05,
       shadowRadius: 20,
       elevation: 3,
     },
   },
   motion: {
     durations: {
-      micro: 200,      // Soft buttons scale & color changes
-      screen: 450,     // Easing transitions for screen stacks
-      hero: 700,       // Staggered reveals of AI looks & insights
+      micro: 200,
+      screen: 450,
+      hero: 700,
     },
     easing: {
-      luxuryBezier: [0.25, 0.1, 0.25, 1] as [number, number, number, number], // calm ease-in-out curve
+       luxuryBezier: [0.25, 0.1, 0.25, 1] as [number, number, number, number],
     },
     stagger: {
       sectionDelay: 120,
@@ -121,10 +121,10 @@ export const THEME = {
     },
   },
   atmosphere: {
-    ambientGradient: { start: '#FAF5F2', end: '#EFE3DF' },
-    vignette: 'rgba(32, 21, 21, 0.03)',
-    filmGrain: 'rgba(32, 21, 21, 0.015)',
-    heroGlow: 'rgba(212, 175, 55, 0.06)',
-    scannerVignette: 'rgba(0, 0, 0, 0.35)',
+    ambientGradient: { start: '#DAF1DE', end: '#B5D4BB' }, // Luxury Mint to soft green sand
+    vignette: 'rgba(5, 31, 32, 0.04)', // subtle botanical vignette
+    filmGrain: 'rgba(5, 31, 32, 0.015)',
+    heroGlow: 'rgba(22, 56, 50, 0.08)', // soft emerald glow
+    scannerVignette: 'rgba(5, 31, 32, 0.35)',
   }
 };

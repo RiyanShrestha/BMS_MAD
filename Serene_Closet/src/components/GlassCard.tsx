@@ -21,13 +21,13 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   const { colors, isDarkMode, theme } = useTheme();
 
   // Adapt colors for light or dark cinematic styles
-  const baseBg = isDarkMode ? `rgba(26, 18, 18, ${opacity})` : `rgba(255, 251, 249, ${opacity})`;
-  const borderColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.75)';
-  const innerLightColor = isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.45)';
+  const baseBg = isDarkMode ? `rgba(11, 43, 38, ${opacity})` : `rgba(218, 241, 222, ${opacity})`;
+  const borderColor = isDarkMode ? 'rgba(142, 182, 155, 0.12)' : 'rgba(255, 255, 255, 0.75)';
+  const innerLightColor = isDarkMode ? 'rgba(142, 182, 155, 0.18)' : 'rgba(255, 255, 255, 0.45)';
 
   const activeShadows = isDarkMode
     ? {
-        shadowColor: '#000000',
+        shadowColor: '#051F20',
         shadowOffset: { width: 0, height: 12 },
         shadowOpacity: 0.35,
         shadowRadius: 28,
@@ -57,7 +57,7 @@ export const GlassCard: React.FC<GlassCardProps> = ({
       <View 
         style={[
           styles.warmInnerTint, 
-          { backgroundColor: isDarkMode ? 'rgba(167, 28, 53, 0.012)' : 'rgba(212, 175, 55, 0.015)' }
+          { backgroundColor: isDarkMode ? 'rgba(35, 83, 71, 0.015)' : 'rgba(22, 56, 50, 0.012)' }
         ]} 
         pointerEvents="none" 
       />

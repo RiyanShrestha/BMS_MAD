@@ -180,7 +180,7 @@ export const ExploreScreen = ({ navigation }: any): React.JSX.Element => {
                   {
                     backgroundColor: colors.cardBackground,
                     borderColor: colors.border,
-                    shadowColor: isDarkMode ? '#000000' : '#201515',
+                    shadowColor: isDarkMode ? '#000000' : '#051F20',
                   }
                 ]}
               >
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   },
   featuredOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(32, 21, 21, 0.2)',
+    backgroundColor: 'rgba(5, 31, 32, 0.2)',
   },
   featuredMeta: {
     margin: 18,

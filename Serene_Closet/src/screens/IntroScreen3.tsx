@@ -49,7 +49,7 @@ export const IntroScreen3 = ({ navigation }: any) => {
 
         {/* Model Image inside Arch-style Border */}
         <View style={styles.archWrapper}>
-          <View style={[styles.archContainer, { backgroundColor: colors.cardBackground, borderColor: colors.border, shadowColor: isDarkMode ? '#000000' : '#201515' }]}>
+          <View style={[styles.archContainer, { backgroundColor: colors.cardBackground, borderColor: colors.border, shadowColor: isDarkMode ? '#000000' : '#051F20' }]}>
             <EditorialImage
               source={{ uri: IMAGES.intro3 }}
               style={styles.image}

@@ -116,7 +116,7 @@ export const AnimatedProductCard: React.FC<AnimatedProductCardProps> = ({
             style={[
               styles.likeButton,
               {
-                backgroundColor: isDarkMode ? 'rgba(34, 25, 25, 0.92)' : 'rgba(255, 255, 255, 0.9)',
+                backgroundColor: isDarkMode ? 'rgba(11, 43, 38, 0.92)' : 'rgba(255, 255, 255, 0.9)',
                 borderColor: colors.border,
               }
             ]}

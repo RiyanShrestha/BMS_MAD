@@ -37,7 +37,7 @@ export const AIRecommendationCard: React.FC<AIRecommendationCardProps> = ({
         { 
           backgroundColor: colors.cardBackground, 
           borderColor: colors.border,
-          shadowColor: isDarkMode ? '#000000' : '#201515',
+          shadowColor: isDarkMode ? '#000000' : '#051F20',
         }, 
         style
       ]}
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   gradientOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(32, 21, 21, 0.22)',
+    backgroundColor: 'rgba(5, 31, 32, 0.22)',
   },
   floatingCard: {
     margin: THEME.spacing.md,

@@ -68,7 +68,7 @@ export const LuxuryButton: React.FC<LuxuryButtonProps> = ({
   };
 
   const buttonDisabledStyle = {
-    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(139, 0, 31, 0.08)',
+    backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(22, 56, 50, 0.08)',
     borderColor: 'transparent',
   };
 

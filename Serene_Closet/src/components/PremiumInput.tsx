@@ -35,7 +35,7 @@ export const PremiumInput: React.FC<PremiumInputProps> = ({
 
   const borderBottomColor = focusAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgba(234, 221, 221, 0.6)', THEME.colors.primaryBurgundy],
+    outputRange: ['rgba(142, 182, 155, 0.4)', THEME.colors.primaryBurgundy],
   });
 
   const borderBottomWidth = focusAnim.interpolate({
@@ -57,7 +57,7 @@ export const PremiumInput: React.FC<PremiumInputProps> = ({
       >
         <TextInput
           style={styles.input}
-          placeholderTextColor="rgba(122, 106, 106, 0.45)"
+          placeholderTextColor="rgba(35, 83, 71, 0.45)"
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}

@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   iconRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(139, 0, 31, 0.05)',
+    backgroundColor: 'rgba(22, 56, 50, 0.05)',
     paddingHorizontal: THEME.spacing.sm,
     paddingVertical: 4,
     borderRadius: THEME.borderRadius.pill,
